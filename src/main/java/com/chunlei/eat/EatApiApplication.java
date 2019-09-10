@@ -14,8 +14,13 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class EatApiApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(EatApiApplication.class, args);
+        System.out.println("--------------------接口文档地址-----------------------");
         System.out.println("http://localhost:8725/eat/swagger-ui.html");
+        System.out.println("--------------------数据库监控台-----------------------");
+        System.out.println("http://localhost:8725/eat/druid/login.html");
+
     }
 
 }
