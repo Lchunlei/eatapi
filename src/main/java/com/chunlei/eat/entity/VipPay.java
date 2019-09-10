@@ -17,6 +17,21 @@ public class VipPay {
 
     private String eToken;
 
+    @Override
+    public String toString() {
+        return "VipPay{" +
+                "inId=" + inId +
+                ", shopId=" + shopId +
+                ", shopName='" + shopName + '\'' +
+                ", payType=" + payType +
+                ", payNum='" + payNum + '\'' +
+                ", payValue=" + payValue +
+                ", useRemark='" + useRemark + '\'' +
+                ", cTime=" + cTime +
+                ", eToken='" + eToken + '\'' +
+                '}';
+    }
+
     public String geteToken() {
         return eToken;
     }

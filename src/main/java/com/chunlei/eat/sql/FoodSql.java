@@ -17,7 +17,7 @@ public class FoodSql {
             if(foodInfo.getFoodPrice()!=null){
                 SET("foodPrice=#{foodPrice}");
             }
-            if(foodInfo.getFoodStatus()!=null){
+            if(foodInfo.getPaixu()!=null){
                 SET("paixu=#{paixu}");
             }
             SET("uTime=NOW()");

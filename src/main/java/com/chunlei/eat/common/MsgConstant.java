@@ -9,7 +9,7 @@ public class MsgConstant {
 
     public static final String PARAMS_NULL_ERR = "参数缺失！";
 
-    public static final String SYS_ERR = "系统异常！";
+    public static final String SYS_ERR = "系统繁忙，请稍后再试！";
 
     public static final String DATA_NULL = "所查数据为空！";
 

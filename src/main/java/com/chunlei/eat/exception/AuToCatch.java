@@ -32,7 +32,7 @@ public class AuToCatch implements HandlerExceptionResolver {
         response.setHeader("Cache-Control", "no-cache, must-revalidate");
         resp.setRespCode("R444");
         log.error(ex.getMessage(),ex);
-        resp.respErr("系统繁忙，请稍后！");
+        resp.respErr("系统繁忙，请稍后！！");
         try {
             response.getWriter().write(JSON.toJSONString(resp));
         } catch (IOException e) {

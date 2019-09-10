@@ -26,8 +26,11 @@ public class ShopSql {
             if(shopInfo.getBossName()!=null){
                 SET("bossName=#{bossName}");
             }
+            if(shopInfo.getExpireTime()!=null){
+                SET("expireTime=#{expireTime}");
+            }
             SET("loginTime=NOW()");
-            WHERE("shopId=#{shopId}");
+            WHERE("wxOpenId=#{wxOpenId}");
         }}.toString();
     }
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.entity.UserInfo;
+import com.chunlei.eat.entity.VipPay;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.ShopService;
 import com.chunlei.eat.utils.Reqclient;
@@ -39,18 +40,41 @@ public class ShopController {
     @ApiOperation(value="商家入驻", notes="商家入驻")
     public ApiResp join(@RequestBody ShopInfo shopInfo){
         ApiResp<String> resp = new ApiResp();
-        log.info("\n-----用户主动登录---->"+shopInfo);
-        shopService.userLogin(shopInfo,resp);
+        log.info("\n-----商家入驻---->"+shopInfo);
+        shopService.join(shopInfo,resp);
         return resp;
     }
 
     @RequestMapping(value = "/vip",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="商家升级", notes="商家升级")
-    public ApiResp renewVip(@RequestBody ShopInfo shopInfo){
+    public ApiResp renewVip(@RequestBody VipPay vipPay){
         ApiResp<String> resp = new ApiResp();
-        log.info("\n-----用户主动登录---->"+shopInfo);
-        shopService.userLogin(shopInfo,resp);
+        log.info("\n-----商家升级---->"+vipPay);
+        shopService.renewVip(vipPay,resp);
         return resp;
     }
+
+    @RequestMapping(value = "/auth",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="获取微信接口调用凭证", notes="获取微信接口调用凭证")
+    public ApiResp getWxAuth(){
+        ApiResp<String> resp = new ApiResp();
+        log.info("\n-----获取微信接口调用凭证----");
+        //获取微信的openid
+        String respJson = Reqclient.getWxAuth();
+        if(StringTool.isBlank(respJson)){
+            resp.respErr(MsgConstant.SYS_ERR);
+        }else {
+            JSONObject json = JSONObject.parseObject(respJson);
+            String accessToken = json.getString("access_token");
+            if(StringTool.isBlank(accessToken)){
+                log.error("\n获取accessToken失败-->"+json.toJSONString());
+                resp.respErr(MsgConstant.SYS_ERR);
+            }else {
+                resp.setRespData(accessToken);
+            }
+        }
+        return resp;
+    }
+
 
 }

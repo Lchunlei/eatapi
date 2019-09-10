@@ -34,6 +34,11 @@ public class Reqclient {
         return getReq(reqUrl);
     }
 
+    public static String getWxAuth(){
+        String reqUrl = WxConfig.WX_ACCESS_TOKEN_URL;
+        return getReq(reqUrl);
+    }
+
     /**
      * 发送GET请求参数直接拼接
      */

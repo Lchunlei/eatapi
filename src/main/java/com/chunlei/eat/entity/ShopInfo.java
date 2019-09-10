@@ -14,6 +14,7 @@ public class ShopInfo {
     private String bossTel;
     private String bossName;
     private Integer shopStatus;//0歇业1营业
+    private Integer vipStatus;//0不是VIP，1是VIP
     private Date loginTime;
     private Date expireTime;
     private Date cTime;
@@ -29,9 +30,19 @@ public class ShopInfo {
                 ", bossTel='" + bossTel + '\'' +
                 ", bossName='" + bossName + '\'' +
                 ", shopStatus=" + shopStatus +
+                ", vipStatus=" + vipStatus +
+                ", loginTime=" + loginTime +
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public Integer getVipStatus() {
+        return vipStatus;
+    }
+
+    public void setVipStatus(Integer vipStatus) {
+        this.vipStatus = vipStatus;
     }
 
     public Date getLoginTime() {
