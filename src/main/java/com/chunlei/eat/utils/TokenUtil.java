@@ -4,7 +4,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
-
 import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +14,7 @@ public class TokenUtil {
 	private static final String Key = "liuchunleieat";
 	private static final String IV = "d039b7a926c3b289";
 
-	private static SimpleDateFormat format = new SimpleDateFormat("yyyy-MM");
+	private static SimpleDateFormat format = new SimpleDateFormat("yy-MM");
 
 	private static Cipher global_cipher;
 	private static SecretKeySpec global_secretKey;
@@ -28,36 +27,85 @@ public class TokenUtil {
 			e.printStackTrace();
 		}
 	}
+	//根据token获取id
+	public static Integer getSidByToken(String content){
+		String str = decrypt(content);
+		if(str.startsWith("ss")){
+			String dateStr = str.substring(0,7);
+			String nowStr = format.format(new Date());
+			if(nowStr.equals(dateStr)){
+				String idStr = str.substring(35);
+				return Integer.parseInt(idStr);
+			}else {
+				return null;
+			}
+		}else {
+			return null;
+		}
+	}
+
+	//根据token获取用户id
+	public static String getSopenIdByToken(String content){
+		String str = decrypt(content);
+		if(str.startsWith("ss")){
+			String dateStr = str.substring(0,7);
+			String nowStr = format.format(new Date());
+			if(nowStr.equals(dateStr)){
+				String idStr = str.substring(7,35);
+				return idStr;
+			}else {
+				return null;
+			}
+		}else {
+			return null;
+		}
+	}
+
 	//oYmsa0VexWjPUPA_k1qy5JiXHWAg
 	//根据token获取id
-	public static Integer getIdByToken(String content){
+	public static Integer getUidByToken(String content){
 		String str = decrypt(content);
-		String dateStr = str.substring(0,7);
-		String nowStr = format.format(new Date());
-		if(nowStr.equals(dateStr)){
-			String idStr = str.substring(35);
-			return Integer.parseInt(idStr);
+		if(str.startsWith("uu")){
+			String dateStr = str.substring(0,7);
+			String nowStr = format.format(new Date());
+			if(nowStr.equals(dateStr)){
+				String idStr = str.substring(35);
+				return Integer.parseInt(idStr);
+			}else {
+				return null;
+			}
 		}else {
 			return null;
 		}
 	}
 
-	//根据token获取id
-	public static String getOpenIdByToken(String content){
+	//根据token获取用户id
+	public static String getUopenIdByToken(String content){
 		String str = decrypt(content);
-		String dateStr = str.substring(0,7);
-		String nowStr = format.format(new Date());
-		if(nowStr.equals(dateStr)){
-			String idStr = str.substring(7,35);
-			return idStr;
+		if(str.startsWith("uu")){
+			String dateStr = str.substring(0,7);
+			String nowStr = format.format(new Date());
+			if(nowStr.equals(dateStr)){
+				String idStr = str.substring(7,35);
+				return idStr;
+			}else {
+				return null;
+			}
 		}else {
 			return null;
 		}
 	}
 
-	public static String getToken(Integer userId,String openId){
+	//获取用户标识
+	public static String getUtoken(Integer uId,String openId){
 		String nowStr = format.format(new Date());
-		String str = nowStr+openId+userId;
+		String str = "uu"+nowStr+openId+uId;
+		return encrypt(str);
+	}
+	//获取店铺标识
+	public static String getStoken(Integer uId,String openId){
+		String nowStr = format.format(new Date());
+		String str = "ss"+nowStr+openId+uId;
 		return encrypt(str);
 	}
 

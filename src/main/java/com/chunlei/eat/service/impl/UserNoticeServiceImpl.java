@@ -22,7 +22,7 @@ public class UserNoticeServiceImpl implements UserNoticeService {
     @Override
     public void findNotice(String eToken, ApiResp resp) {
         try {
-            String openid = TokenUtil.getOpenIdByToken(eToken);
+            String openid = TokenUtil.getSopenIdByToken(eToken);
             List<UserNotice> notices = userNoticeMapper.findByOpenID(openid);
             List<UserNotice> alls = userNoticeMapper.findAll();
             notices.addAll(alls);

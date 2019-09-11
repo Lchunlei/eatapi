@@ -4,6 +4,8 @@ import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 
+import java.util.List;
+
 /**
  * @Created by lcl on 2019/9/9 0009
  */
@@ -15,6 +17,7 @@ public interface BillService {
 
     public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
 
+    public void getBills(Integer billStatus,String eToken, ApiResp<List<BillInfo>> resp);
 
 
 }

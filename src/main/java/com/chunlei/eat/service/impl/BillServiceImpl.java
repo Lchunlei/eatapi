@@ -59,8 +59,28 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
+    public void getBills(Integer billStatus,String eToken, ApiResp<List<BillInfo>> resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            List<BillInfo> billInfos;
+            if(billStatus==null){
+                billInfos = billInfoMapper.findAllBills(shopId);
+            }else {
+                billInfos = billInfoMapper.findOutBills(shopId,billStatus);
+            }
+            if(billInfos.isEmpty()){
+                resp.respErr(MsgConstant.DATA_NULL);
+            }else {
+                resp.setRespData(billInfos);
+            }
+        }
+    }
+
+    @Override
     public void deal(Integer billId,Integer billStatus,String eToken, ApiResp resp) {
-        TokenUtil.getIdByToken(eToken);
+        TokenUtil.getSopenIdByToken(eToken);
         int i = billInfoMapper.updateStatus(billId,billStatus);
         if(i!=1){
             resp.respErr(MsgConstant.OPE_ERR);

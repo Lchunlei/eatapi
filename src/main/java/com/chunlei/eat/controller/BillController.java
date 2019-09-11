@@ -1,5 +1,6 @@
 package com.chunlei.eat.controller;
 
+import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.service.BillService;
@@ -9,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @Created by lcl on 2019/9/9 0009
@@ -44,13 +47,24 @@ public class BillController {
 
     @RequestMapping(value = "/deal",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="处理订单", notes="处理订单")
-    public ApiResp deal(@RequestParam Integer billId,Integer billStatus,String eToken){
+    public ApiResp deal(@RequestParam Integer billId,@RequestParam Integer billStatus,@RequestParam String eToken){
         ApiResp resp = new ApiResp();
         log.info("\n-----处理订单---->"+billId+"-->"+billStatus+"-->"+eToken);
         billService.deal(billId,billStatus,eToken,resp);
         log.info("\n-----处理订单resp---->"+resp);
         return resp;
     }
+
+    @RequestMapping(value = "/list",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看本店订单列表", notes="查看本店订单列表")
+    public ApiResp<List<BillInfo>> list(@RequestParam Integer billStatus, @RequestParam String eToken){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----查看本店订单列表---->"+billStatus+"-->"+eToken);
+        billService.getBills(billStatus,eToken,resp);
+        log.info("\n-----查看本店订单列表resp---->"+resp);
+        return resp;
+    }
+
 
 
 

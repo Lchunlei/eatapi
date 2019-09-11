@@ -13,11 +13,12 @@ import org.springframework.stereotype.Service;
 
 /**
  * @Created by lcl on 2019/9/6 0006
+ * 顾客token
+ * 商家eToken
  */
 @Service
 public class UserServiceImpl implements UserService {
     private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
-
 
     @Autowired
     private UserMapper userMapper;
@@ -29,13 +30,13 @@ public class UserServiceImpl implements UserService {
             int i = userMapper.insertOne(wxOpenId);
             if(i==1){
                 userInfo = userMapper.findMyInfo(wxOpenId);
-                String tolen = TokenUtil.getToken(userInfo.getUserId(),wxOpenId);
+                String tolen = TokenUtil.getUtoken(userInfo.getUserId(),wxOpenId);
                 apiResp.setRespData(tolen);
             }else {
                 apiResp.respErr(MsgConstant.SYS_ERR);
             }
         }else {
-            String tolen = TokenUtil.getToken(userInfo.getUserId(),wxOpenId);
+            String tolen = TokenUtil.getUtoken(userInfo.getUserId(),wxOpenId);
             apiResp.setRespData(tolen);
         }
     }

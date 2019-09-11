@@ -30,20 +30,20 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public void userLogin(ShopInfo shopInfo, ApiResp apiResp) {
         //拼接当前信息保存到店铺表
-        String openid = TokenUtil.getOpenIdByToken(shopInfo.getWxOpenId());
+        String openid = TokenUtil.getUopenIdByToken(shopInfo.getWxOpenId());
         shopInfo.setWxOpenId(openid);
         ShopInfo shop = shopMapper.findMyShop(openid);
         int i;
         String eToken;
         if(shop==null){
             i = shopMapper.insertOne(shopInfo);
-            eToken = TokenUtil.getToken(shopMapper.selectMaxSeq(),openid);
+            eToken = TokenUtil.getStoken(shopMapper.selectMaxSeq(),openid);
         }else {
             shopInfo.setBossName(null);
             shopInfo.setBossTel(null);
             shopInfo.setExpireTime(null);
             i = shopMapper.updateBathInfo(shopInfo);
-            eToken = TokenUtil.getToken(shop.getShopId(),openid);
+            eToken = TokenUtil.getStoken(shop.getShopId(),openid);
         }
         if(i==1){
             //刷新客户端token
@@ -56,7 +56,7 @@ public class ShopServiceImpl implements ShopService {
     //用户正式入驻商家
     @Override
     public void join(ShopInfo shopInfo, ApiResp apiResp) {
-        String openId = TokenUtil.getOpenIdByToken(shopInfo.getWxOpenId());
+        String openId = TokenUtil.getSopenIdByToken(shopInfo.getWxOpenId());
         ShopInfo shop = shopMapper.findMyShop(openId);
         if(shop==null){
             apiResp.respErr(MsgConstant.NOT_LOGIN);
@@ -76,7 +76,7 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void renewVip(VipPay vipPay, ApiResp apiResp){
-        String openId = TokenUtil.getOpenIdByToken(vipPay.geteToken());
+        String openId = TokenUtil.getSopenIdByToken(vipPay.geteToken());
         ShopInfo shop = shopMapper.findMyShop(openId);
         if(shop==null){
             apiResp.respErr(MsgConstant.NOT_LOGIN);

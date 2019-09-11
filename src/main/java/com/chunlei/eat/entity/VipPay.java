@@ -9,7 +9,7 @@ public class VipPay {
     private Integer inId;
     private Integer shopId;
     private String shopName;
-    private Integer payType;//1微信2支付宝
+    private Integer payType;//1微信2支付宝3系统赠送
     private String payNum;
     private Integer payValue;
     private String useRemark;

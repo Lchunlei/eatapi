@@ -15,6 +15,7 @@ public class ShopInfo {
     private String bossName;
     private Integer shopStatus;//0歇业1营业
     private Integer vipStatus;//0不是VIP，1是VIP
+    private String inviteCode;//邀请注册码（邀请者手机号）
     private Date loginTime;
     private Date expireTime;
     private Date cTime;
@@ -35,6 +36,14 @@ public class ShopInfo {
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
     }
 
     public Integer getVipStatus() {

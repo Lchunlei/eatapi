@@ -26,32 +26,45 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public void addFood(FoodInfo foodInfo, ApiResp resp) {
-        Integer shopId = TokenUtil.getIdByToken(foodInfo.geteToken());
-        foodInfo.setShopId(shopId);
-        foodMapper.insertOne(foodInfo);
+        Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            foodInfo.setShopId(shopId);
+            foodMapper.insertOne(foodInfo);
+        }
+
     }
 
     @Override
     public void addFoods(MuchFood muchFood, ApiResp resp) {
-        Integer shopId = TokenUtil.getIdByToken(muchFood.geteToken());
-        int i = 0;
-        for(FoodInfo f:muchFood.getFoods()){
-            f.setShopId(shopId);
-            int j = foodMapper.insertOne(f);
-            if(j==1){
-                j++;
+        Integer shopId = TokenUtil.getSidByToken(muchFood.geteToken());
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            int i = 0;
+            for(FoodInfo f:muchFood.getFoods()){
+                f.setShopId(shopId);
+                int j = foodMapper.insertOne(f);
+                if(j==1){
+                    j++;
+                }
             }
+            resp.setRespMsg("成功添加"+i+"份新品！");
         }
-        resp.setRespMsg("成功添加"+i+"份新品！");
     }
 
     @Override
     public void updateFood(FoodInfo foodInfo, ApiResp resp) {
-        Integer shopId = TokenUtil.getIdByToken(foodInfo.geteToken());
-        foodInfo.setShopId(shopId);
-        int i = foodMapper.updateBath(foodInfo);
-        if(i!=1){
-            resp.setRespMsg(MsgConstant.OPE_ERR);
+        Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            foodInfo.setShopId(shopId);
+            int i = foodMapper.updateBath(foodInfo);
+            if(i!=1){
+                resp.setRespMsg(MsgConstant.OPE_ERR);
+            }
         }
     }
 
