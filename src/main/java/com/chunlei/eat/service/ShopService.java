@@ -13,6 +13,10 @@ public interface ShopService {
 
     public void join(ShopInfo shopInfo, ApiResp apiResp);
 
+    public void upInfo(ShopInfo shopInfo, ApiResp apiResp);
+
     public void renewVip(VipPay vipPay, ApiResp apiResp);
+
+    public void getInfo(String eToken, ApiResp<ShopInfo> apiResp);
 
 }

@@ -26,11 +26,30 @@ public class ShopSql {
             if(shopInfo.getBossName()!=null){
                 SET("bossName=#{bossName}");
             }
+            if(shopInfo.getInviteCode()!=null){
+                SET("inviteCode=#{inviteCode}");
+            }
+            if(shopInfo.getProvince()!=null){
+                SET("province=#{province}");
+            }
+            if(shopInfo.getCity()!=null){
+                SET("city=#{city}");
+            }
+            if(shopInfo.getDistrict()!=null){
+                SET("district=#{district}");
+            }
+            if(shopInfo.getAddress()!=null){
+                SET("address=#{address}");
+            }
             if(shopInfo.getExpireTime()!=null){
                 SET("expireTime=#{expireTime}");
             }
             SET("loginTime=NOW()");
-            WHERE("wxOpenId=#{wxOpenId}");
+            if(shopInfo.getShopId()!=null){
+                WHERE("shopId=#{shopId}");
+            }else {
+                WHERE("wxOpenId=#{wxOpenId}");
+            }
         }}.toString();
     }
 

@@ -16,6 +16,10 @@ public class ShopInfo {
     private Integer shopStatus;//0歇业1营业
     private Integer vipStatus;//0不是VIP，1是VIP
     private String inviteCode;//邀请注册码（邀请者手机号）
+    private String province;
+    private String city;
+    private String district;
+    private String address;
     private Date loginTime;
     private Date expireTime;
     private Date cTime;
@@ -32,10 +36,47 @@ public class ShopInfo {
                 ", bossName='" + bossName + '\'' +
                 ", shopStatus=" + shopStatus +
                 ", vipStatus=" + vipStatus +
+                ", inviteCode='" + inviteCode + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", address='" + address + '\'' +
                 ", loginTime=" + loginTime +
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getInviteCode() {

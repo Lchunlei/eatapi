@@ -31,7 +31,7 @@ public class TokenUtil {
 	public static Integer getSidByToken(String content){
 		String str = decrypt(content);
 		if(str.startsWith("ss")){
-			String dateStr = str.substring(0,7);
+			String dateStr = str.substring(2,7);
 			String nowStr = format.format(new Date());
 			if(nowStr.equals(dateStr)){
 				String idStr = str.substring(35);
@@ -48,7 +48,7 @@ public class TokenUtil {
 	public static String getSopenIdByToken(String content){
 		String str = decrypt(content);
 		if(str.startsWith("ss")){
-			String dateStr = str.substring(0,7);
+			String dateStr = str.substring(2,7);
 			String nowStr = format.format(new Date());
 			if(nowStr.equals(dateStr)){
 				String idStr = str.substring(7,35);
@@ -66,7 +66,7 @@ public class TokenUtil {
 	public static Integer getUidByToken(String content){
 		String str = decrypt(content);
 		if(str.startsWith("uu")){
-			String dateStr = str.substring(0,7);
+			String dateStr = str.substring(2,7);
 			String nowStr = format.format(new Date());
 			if(nowStr.equals(dateStr)){
 				String idStr = str.substring(35);
@@ -83,7 +83,7 @@ public class TokenUtil {
 	public static String getUopenIdByToken(String content){
 		String str = decrypt(content);
 		if(str.startsWith("uu")){
-			String dateStr = str.substring(0,7);
+			String dateStr = str.substring(2,7);
 			String nowStr = format.format(new Date());
 			if(nowStr.equals(dateStr)){
 				String idStr = str.substring(7,35);

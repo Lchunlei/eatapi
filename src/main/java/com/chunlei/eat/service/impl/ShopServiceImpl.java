@@ -56,19 +56,28 @@ public class ShopServiceImpl implements ShopService {
     //用户正式入驻商家
     @Override
     public void join(ShopInfo shopInfo, ApiResp apiResp) {
-        String openId = TokenUtil.getSopenIdByToken(shopInfo.getWxOpenId());
-        ShopInfo shop = shopMapper.findMyShop(openId);
-        if(shop==null){
+        Integer sId = TokenUtil.getSidByToken(shopInfo.getWxOpenId());
+        if(sId==null){
             apiResp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            if(shop.getShopName()==null){
-                //新入驻商户免费赠送3天会员
-                shopInfo.setExpireTime(null);
-                shopInfo.setWxOpenId(openId);
-                shopMapper.updateBathInfo(shopInfo);
-            }else {
-                apiResp.respErr(MsgConstant.OPE_ERR);
-            }
+            ShopInfo shop = shopMapper.findShopById(sId);
+            shopInfo.setShopId(shop.getShopId());
+            shopInfo.setExpireTime(null);
+            shopMapper.updateBathInfo(shopInfo);
+        }
+    }
+
+    @Override
+    public void upInfo(ShopInfo shopInfo, ApiResp apiResp) {
+        Integer sId = TokenUtil.getSidByToken(shopInfo.getWxOpenId());
+        if(sId==null){
+            apiResp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            ShopInfo shop = shopMapper.findShopById(sId);
+            shopInfo.setShopId(shop.getShopId());
+            shopInfo.setExpireTime(null);
+            shopInfo.setInviteCode(null);
+            shopMapper.updateBathInfo(shopInfo);
         }
     }
 
@@ -76,16 +85,27 @@ public class ShopServiceImpl implements ShopService {
     @Override
     @Transactional
     public void renewVip(VipPay vipPay, ApiResp apiResp){
-        String openId = TokenUtil.getSopenIdByToken(vipPay.geteToken());
-        ShopInfo shop = shopMapper.findMyShop(openId);
-        if(shop==null){
+        Integer sId = TokenUtil.getSidByToken(vipPay.geteToken());
+        if(sId==null){
             apiResp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shop = shopMapper.findShopById(sId);
             //直接先开通VIP功能，其他修改等后台审核
             vipPay.setShopId(shop.getShopId());
             vipPay.setShopName(shop.getShopName());
             vipPayMapper.insertOne(vipPay);
             shopMapper.updateVip(1,shop.getShopId());
+        }
+    }
+
+    @Override
+    public void getInfo(String eToken, ApiResp<ShopInfo> apiResp) {
+        Integer sId = TokenUtil.getSidByToken(eToken);
+        if(sId==null){
+            apiResp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            ShopInfo shop = shopMapper.findShopById(sId);
+            apiResp.setRespData(shop);
         }
     }
 

@@ -64,17 +64,32 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            List<BillInfo> billInfos;
             if(billStatus==null){
-                billInfos = billInfoMapper.findAllBills(shopId);
-            }else {
-                billInfos = billInfoMapper.findOutBills(shopId,billStatus);
+
+            }else if(billStatus.equals(0)){
+                //待处理客单
+
+            }else if(billStatus.equals(1)){
+                //待出餐
+                List<BillInfo> billInfos = billInfoMapper.findOutBills(shopId,billStatus);
+                if(billInfos.isEmpty()){
+                    resp.respErr(MsgConstant.DATA_NULL);
+                }else {
+                    resp.setRespData(billInfos);
+                }
+            }else if(billStatus.equals(2)){
+                //月全部订单
+                List<BillInfo> billInfos = billInfoMapper.findAllBills(shopId);
+                if(billInfos.isEmpty()){
+                    resp.respErr(MsgConstant.DATA_NULL);
+                }else {
+                    resp.setRespData(billInfos);
+                }
+            }else if(billStatus.equals(3)){
+                //历史全部订单
+
             }
-            if(billInfos.isEmpty()){
-                resp.respErr(MsgConstant.DATA_NULL);
-            }else {
-                resp.setRespData(billInfos);
-            }
+
         }
     }
 
