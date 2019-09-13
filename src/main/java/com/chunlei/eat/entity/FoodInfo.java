@@ -11,6 +11,8 @@ public class FoodInfo {
     private Integer foodPrice;
     private Integer shopId;
     private Integer foodStatus;
+    //售卖状态
+    private Boolean sellStatus;
     private Integer paixu;
     private Date uTime;
 
@@ -25,9 +27,16 @@ public class FoodInfo {
                 ", shopId=" + shopId +
                 ", foodStatus=" + foodStatus +
                 ", paixu=" + paixu +
-                ", uTime=" + uTime +
-                ", eToken='" + eToken + '\'' +
+                ", sellStatus='" + sellStatus + '\'' +
                 '}';
+    }
+
+    public Boolean getSellStatus() {
+        return sellStatus;
+    }
+
+    public void setSellStatus(Boolean sellStatus) {
+        this.sellStatus = sellStatus;
     }
 
     public String geteToken() {
@@ -75,6 +84,11 @@ public class FoodInfo {
     }
 
     public void setFoodStatus(Integer foodStatus) {
+        if(foodStatus.equals(0)){
+            this.sellStatus = false;
+        }else {
+            this.sellStatus = true;
+        }
         this.foodStatus = foodStatus;
     }
 

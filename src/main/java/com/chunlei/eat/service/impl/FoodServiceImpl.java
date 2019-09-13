@@ -55,6 +55,25 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
+    public void sellFood(Integer foodId, String eToken, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            FoodInfo foodInfo = foodMapper.findFoodById(foodId);
+            int i = 0;
+            if(foodInfo.getFoodStatus().equals(0)){
+                i=foodMapper.updateSell(1,foodId);
+            }else {
+                i=foodMapper.updateSell(0,foodId);
+            }
+            if(i==0){
+                resp.respErr(MsgConstant.OPE_ERR);
+            }
+        }
+    }
+
+    @Override
     public void updateFood(FoodInfo foodInfo, ApiResp resp) {
         Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
         if(shopId==null){
@@ -69,12 +88,50 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void findAll(Integer shopId, ApiResp<List<FoodInfo>> resp) {
-        List<FoodInfo> foodInfos = foodMapper.findByShopId(shopId);
+    public void findFoodInfo(Integer foodId, ApiResp<FoodInfo> resp) {
+        FoodInfo foodInfo = foodMapper.findFoodById(foodId);
+        if(foodInfo==null){
+            resp.respErr(MsgConstant.DATA_NULL);
+        }else {
+            resp.setRespData(foodInfo);
+        }
+    }
+
+    @Override
+    public void delOne(String eToken, Integer foodId, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            int i = foodMapper.delById(foodId);
+            if(i!=1){
+                resp.setRespMsg(MsgConstant.OPE_ERR);
+            }
+        }
+    }
+
+    @Override
+    public void canEat(Integer shopId, ApiResp<List<FoodInfo>> resp) {
+        List<FoodInfo> foodInfos = foodMapper.findCanEatByShopId(shopId);
         if(foodInfos.isEmpty()){
             resp.respErr(MsgConstant.FOOD_NULL);
         }else {
             resp.setRespData(foodInfos);
+        }
+    }
+
+    @Override
+    public void findAll(String eToken, ApiResp<List<FoodInfo>> resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            List<FoodInfo> foodInfos = foodMapper.findAllByShopId(shopId);
+            if(foodInfos.isEmpty()){
+                resp.respErr(MsgConstant.FOOD_NULL);
+            }else {
+                resp.setRespData(foodInfos);
+            }
         }
     }
 

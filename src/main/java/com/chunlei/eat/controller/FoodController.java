@@ -41,13 +41,52 @@ public class FoodController {
         return resp;
     }
 
+    @RequestMapping(value = "/sell",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="上下架菜品", notes="上下架菜品")
+    public ApiResp sell(@RequestParam Integer foodId,@RequestParam String eToken){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----上下架菜品---->"+foodId+"--->"+eToken);
+        foodService.sellFood(foodId,eToken,resp);
+        log.info("\n-----上下架菜品resp---->"+resp);
+        return resp;
+    }
 
-    @RequestMapping(value = "/all",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value="查看菜单", notes="查看菜单")
-    public ApiResp findAll(@RequestParam Integer shopId){
+    @RequestMapping(value = "/info",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看菜品详情", notes="查看菜品详情")
+    public ApiResp info(@RequestParam Integer foodId){
+        ApiResp<FoodInfo> resp = new ApiResp();
+        log.info("\n-----查看菜品详情---->"+foodId);
+        foodService.findFoodInfo(foodId,resp);
+        log.info("\n-----查看菜品详情---->"+resp);
+        return resp;
+    }
+
+//    @RequestMapping(value = "/delOne",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+//    @ApiOperation(value="删除菜品", notes="删除菜品")
+//    public ApiResp delOne(@RequestParam String eToken,@RequestParam Integer foodId){
+//        ApiResp resp = new ApiResp();
+//        log.info("\n-----删除菜品---->"+eToken+"-->"+foodId);
+//        foodService.delOne(eToken,foodId,resp);
+//        log.info("\n-----删除菜品resp---->"+resp);
+//        return resp;
+//    }
+
+    @RequestMapping(value = "/can/eat",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看可点的菜单", notes="查看可点的菜单")
+    public ApiResp canEat(@RequestParam Integer shopId){
         ApiResp resp = new ApiResp();
         log.info("\n-----查看菜单---->"+shopId);
-        foodService.findAll(shopId,resp);
+        foodService.canEat(shopId,resp);
+        log.info("\n-----查看菜单resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/all",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看本店所有菜单", notes="查看本店所有菜单")
+    public ApiResp findAll(@RequestParam String eToken){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----查看本店所有菜单---->"+eToken);
+        foodService.findAll(eToken,resp);
         log.info("\n-----查看菜单resp---->"+resp);
         return resp;
     }

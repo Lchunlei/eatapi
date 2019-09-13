@@ -15,8 +15,16 @@ public interface FoodService {
 
     public void addFoods(MuchFood muchFood, ApiResp resp);
 
+    public void sellFood(Integer foodId,String eToken, ApiResp resp);
+
     public void updateFood(FoodInfo foodInfo, ApiResp resp);
 
-    public void findAll(Integer shopId, ApiResp<List<FoodInfo>> resp);
+    public void findFoodInfo(Integer foodId, ApiResp<FoodInfo> resp);
+
+    public void delOne(String eToken,Integer foodId, ApiResp resp);
+
+    public void canEat(Integer shopId, ApiResp<List<FoodInfo>> resp);
+
+    public void findAll(String eToken, ApiResp<List<FoodInfo>> resp);
 
 }
