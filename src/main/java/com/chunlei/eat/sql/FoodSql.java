@@ -20,6 +20,12 @@ public class FoodSql {
             if(foodInfo.getPaixu()!=null){
                 SET("paixu=#{paixu}");
             }
+            if(foodInfo.getCateId()!=null){
+                SET("cateId=#{cateId}");
+            }
+            if(foodInfo.getPicUrl()!=null){
+                SET("picUrl=#{picUrl}");
+            }
             SET("uTime=NOW()");
             WHERE("foodId=#{foodId}");
         }}.toString();

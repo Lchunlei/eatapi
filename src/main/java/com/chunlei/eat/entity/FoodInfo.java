@@ -14,9 +14,13 @@ public class FoodInfo {
     //售卖状态
     private Boolean sellStatus;
     private Integer paixu;
+    private Integer cateId;//分类ID
+    private String picUrl;
+    private Integer sellNum;
     private Date uTime;
 
     private String eToken;
+    private Integer count=0;
 
     @Override
     public String toString() {
@@ -29,6 +33,38 @@ public class FoodInfo {
                 ", paixu=" + paixu +
                 ", sellStatus='" + sellStatus + '\'' +
                 '}';
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public Integer getCateId() {
+        return cateId;
+    }
+
+    public void setCateId(Integer cateId) {
+        this.cateId = cateId;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public Integer getSellNum() {
+        return sellNum;
+    }
+
+    public void setSellNum(Integer sellNum) {
+        this.sellNum = sellNum;
     }
 
     public Boolean getSellStatus() {

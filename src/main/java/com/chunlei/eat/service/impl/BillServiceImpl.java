@@ -28,15 +28,18 @@ public class BillServiceImpl implements BillService {
     @Override
     @Transactional
     public void makeBill(MakeOrder makeOrder, ApiResp resp) {
-
-        for(BillInfo b:makeOrder.getBillInfos()){
+        Integer uid = TokenUtil.getUidByToken(makeOrder.geteToken());
+        Integer sid = TokenUtil.getSidByToken(makeOrder.geteToken());
+        if(uid==null&&sid!=null){
+            //商家代客下单
+            uid = 0;
+        }
+        for(FoodInfo b:makeOrder.getBillInfos()){
             FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-            if(foodInfo.getShopId().equals(makeOrder.getShopId())){
-                b.setShopId(makeOrder.getShopId());
-                b.setFoodName(foodInfo.getFoodName());
-                int price = b.getEatNum()*foodInfo.getFoodPrice();
-                b.setTotalPrice(price);
-                billInfoMapper.insertOne(b);
+            if(foodInfo.getShopId().equals(makeOrder.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                //菜单校验完毕，入库
+                BillInfo billInfo = new BillInfo(uid,foodInfo.getShopId(),makeOrder.getDeskCode(),foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                billInfoMapper.insertOne(billInfo);
             }else {
                 resp.respErr(MsgConstant.OPE_ERR);
             }

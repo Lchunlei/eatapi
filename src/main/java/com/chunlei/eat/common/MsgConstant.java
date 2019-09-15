@@ -17,7 +17,7 @@ public class MsgConstant {
 
     public static final String NOT_LOGIN = "请先点击头像登录！";
 
-    public static final String FOOD_NULL = "老板很懒，还未发布菜品！";
+    public static final String FOOD_NULL = "老板略懒，未发菜品！";
 
 
 }

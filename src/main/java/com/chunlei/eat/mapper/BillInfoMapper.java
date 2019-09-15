@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BillInfoMapper {
 
-    @Insert("INSERT INTO bill_today_info(`userId`, `shopId`, `foodId`, `foodName`, `eatNum`, `totalPrice`, `cTime`) VALUES (#{userId},#{shopId},#{foodId},#{foodName},#{eatNum},#{totalPrice},NOW())")
+    @Insert("INSERT INTO bill_today_info(`userId`, `shopId`,`deskCode`, `foodId`, `foodName`, `eatNum`, `totalPrice`, `cTime`) VALUES (#{userId},#{shopId},#{deskCode},#{foodId},#{foodName},#{eatNum},#{totalPrice},NOW())")
     int insertOne(BillInfo billInfo);
 
     @Delete("DELETE FROM bill_today_info WHERE billId=#{billId}")

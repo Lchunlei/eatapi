@@ -9,6 +9,7 @@ public class BillInfo {
     private Integer billId;
     private Integer userId;
     private Integer shopId;
+    private Integer deskCode;
     private Integer foodId;
     private String foodName;
     private Integer eatNum;
@@ -17,6 +18,27 @@ public class BillInfo {
     private Date cTime;
 
     private String eToken;
+
+    public BillInfo() {
+    }
+
+    public BillInfo(Integer userId, Integer shopId,Integer deskCode, Integer foodId, String foodName, Integer eatNum, Integer totalPrice) {
+        this.userId = userId;
+        this.shopId = shopId;
+        this.deskCode = deskCode;
+        this.foodId = foodId;
+        this.foodName = foodName;
+        this.eatNum = eatNum;
+        this.totalPrice = totalPrice;
+    }
+
+    public Integer getDeskCode() {
+        return deskCode;
+    }
+
+    public void setDeskCode(Integer deskCode) {
+        this.deskCode = deskCode;
+    }
 
     public String geteToken() {
         return eToken;

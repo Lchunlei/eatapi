@@ -3,6 +3,7 @@ package com.chunlei.eat.service;
 import com.chunlei.eat.entity.FoodInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
+import com.chunlei.eat.model.resp.MenuCate;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public interface FoodService {
 
     public void delOne(String eToken,Integer foodId, ApiResp resp);
 
-    public void canEat(Integer shopId, ApiResp<List<FoodInfo>> resp);
+    public void canEat(Integer shopId, String eToken,ApiResp<List<MenuCate>> resp);
 
     public void findAll(String eToken, ApiResp<List<FoodInfo>> resp);
 

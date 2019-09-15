@@ -73,11 +73,11 @@ public class FoodController {
 
     @RequestMapping(value = "/can/eat",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="查看可点的菜单", notes="查看可点的菜单")
-    public ApiResp canEat(@RequestParam Integer shopId){
+    public ApiResp canEat(@RequestParam Integer shopId,@RequestParam String eToken){
         ApiResp resp = new ApiResp();
-        log.info("\n-----查看菜单---->"+shopId);
-        foodService.canEat(shopId,resp);
-        log.info("\n-----查看菜单resp---->"+resp);
+        log.info("\n-----查看可点的菜单---->"+shopId+"-->"+eToken);
+        foodService.canEat(shopId,eToken,resp);
+        log.info("\n-----查看可点的菜单resp---->"+resp);
         return resp;
     }
 

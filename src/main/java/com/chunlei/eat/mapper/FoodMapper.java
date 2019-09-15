@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface FoodMapper {
 
-    @Insert("INSERT INTO food_info(`foodName`,`foodPrice`,`shopId`,`paixu`,`uTime`) VALUES (#{foodName},#{foodPrice},#{shopId},#{paixu},NOW())")
+    @Insert("INSERT INTO food_info(`foodName`,`foodPrice`,`shopId`,`cateId`,`paixu`,`uTime`) VALUES (#{foodName},#{foodPrice},#{shopId},#{cateId},#{paixu},NOW())")
     int insertOne(FoodInfo foodInfo);
 
     @UpdateProvider(type= FoodSql.class, method="updateSql")
@@ -25,6 +25,9 @@ public interface FoodMapper {
 
     @Select("SELECT * FROM food_info WHERE shopId=#{shopId} AND foodStatus='1' ORDER BY paixu DESC")
     List<FoodInfo> findCanEatByShopId(@Param("shopId")Integer shopId);
+
+    @Select("SELECT * FROM food_info WHERE shopId=#{shopId} AND cateId=#{cateId} AND foodStatus='1' ORDER BY paixu DESC")
+    List<FoodInfo> findCanEatBycateId(@Param("shopId")Integer shopId,@Param("cateId")Integer cateId);
 
     @Select("SELECT * FROM food_info WHERE shopId=#{shopId} ORDER BY paixu DESC")
     List<FoodInfo> findAllByShopId(@Param("shopId")Integer shopId);

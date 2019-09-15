@@ -1,6 +1,6 @@
 package com.chunlei.eat.model.req;
 
-import com.chunlei.eat.entity.BillInfo;
+import com.chunlei.eat.entity.FoodInfo;
 
 import java.util.List;
 
@@ -8,25 +8,27 @@ import java.util.List;
  * @Created by lcl on 2019/9/9 0009
  */
 public class MakeOrder {
-    private Integer userId;
+    private String eToken;
     private Integer shopId;
-    private List<BillInfo> billInfos;
+    private Integer deskCode;
+    private List<FoodInfo> billInfos;
 
     @Override
     public String toString() {
         return "MakeOrder{" +
-                "userId=" + userId +
+                "eToken='" + eToken + '\'' +
                 ", shopId=" + shopId +
+                ", deskCode=" + deskCode +
                 ", billInfos=" + billInfos +
                 '}';
     }
 
-    public Integer getUserId() {
-        return userId;
+    public String geteToken() {
+        return eToken;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void seteToken(String eToken) {
+        this.eToken = eToken;
     }
 
     public Integer getShopId() {
@@ -37,11 +39,19 @@ public class MakeOrder {
         this.shopId = shopId;
     }
 
-    public List<BillInfo> getBillInfos() {
+    public Integer getDeskCode() {
+        return deskCode;
+    }
+
+    public void setDeskCode(Integer deskCode) {
+        this.deskCode = deskCode;
+    }
+
+    public List<FoodInfo> getBillInfos() {
         return billInfos;
     }
 
-    public void setBillInfos(List<BillInfo> billInfos) {
+    public void setBillInfos(List<FoodInfo> billInfos) {
         this.billInfos = billInfos;
     }
 }
