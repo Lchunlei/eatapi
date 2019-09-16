@@ -3,6 +3,7 @@ package com.chunlei.eat.service;
 import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
+import com.chunlei.eat.model.resp.CtmBill;
 
 import java.util.List;
 
@@ -18,6 +19,8 @@ public interface BillService {
     public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
 
     public void getBills(Integer billStatus,String eToken, ApiResp<List<BillInfo>> resp);
+
+    public void ctmBill(Integer billStatus,String eToken, ApiResp<List<CtmBill>> resp);
 
 
 }

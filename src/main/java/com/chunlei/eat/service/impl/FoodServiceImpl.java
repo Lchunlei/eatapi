@@ -125,6 +125,9 @@ public class FoodServiceImpl implements FoodService {
     public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp) {
         if(shopId ==0 ){
             shopId = TokenUtil.getSidByToken(eToken);
+            if(shopId==null){
+                shopId=0;
+            }
         }
         List<MenuCate> menuCates = new ArrayList();
         for(int i=1;i<6;i++){

@@ -3,6 +3,7 @@ package com.chunlei.eat.controller;
 import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
+import com.chunlei.eat.model.resp.CtmBill;
 import com.chunlei.eat.service.BillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +53,16 @@ public class BillController {
         log.info("\n-----处理订单---->"+billId+"-->"+billStatus+"-->"+eToken);
         billService.deal(billId,billStatus,eToken,resp);
         log.info("\n-----处理订单resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/ctmBill",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看本店客单", notes="查看本店客单")
+    public ApiResp<List<CtmBill>> ctmBill(@RequestParam(required = false) Integer billStatus, @RequestParam String eToken){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----查看本店客单---->"+billStatus+"-->"+eToken);
+        billService.ctmBill(billStatus,eToken,resp);
+        log.info("\n-----查看本店客单resp---->"+resp);
         return resp;
     }
 

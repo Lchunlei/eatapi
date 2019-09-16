@@ -42,4 +42,9 @@ public interface BillInfoMapper {
     @Update("UPDATE bill_today_info SET billStatus=#{billStatus} WHERE billId=#{billId}")
     int updateStatus(@Param("billId")Integer billId,@Param("billStatus")Integer billStatus);
 
+    //查看当前店铺未完成订单的客人ID
+    @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY cTime")
+    List<Integer> findUsersEating(@Param("shopId")Integer shopId,@Param("billStatus")Integer billStatus);
+
+
 }

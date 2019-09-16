@@ -7,12 +7,15 @@ import com.chunlei.eat.mapper.BillInfoMapper;
 import com.chunlei.eat.mapper.FoodMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
+import com.chunlei.eat.model.resp.CtmBill;
 import com.chunlei.eat.service.BillService;
 import com.chunlei.eat.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -71,6 +74,17 @@ public class BillServiceImpl implements BillService {
 
             }else if(billStatus.equals(0)){
                 //待处理客单
+//                List<Integer> eatingUsers = billInfoMapper.findUsersEating(shopId,billStatus);
+//                if(eatingUsers.isEmpty()){
+//                    resp.respErr(MsgConstant.DATA_NULL);
+//                }else {
+//                    List<BillInfo> billInfos = new ArrayList();
+//                    for(Integer uid:eatingUsers){
+//                        List<BillInfo> bs = billInfoMapper.findUserBills(shopId,uid,billStatus);
+//                        billInfos.addAll(bs);
+//                    }
+//                    resp.setRespData(billInfos);
+//                }
 
             }else if(billStatus.equals(1)){
                 //待出餐
@@ -91,6 +105,44 @@ public class BillServiceImpl implements BillService {
             }else if(billStatus.equals(3)){
                 //历史全部订单
 
+            }
+
+        }
+    }
+
+    @Override
+    public void ctmBill(Integer billStatus, String eToken, ApiResp<List<CtmBill>> resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            //待处理客单
+            List<Integer> eatingUsers = billInfoMapper.findUsersEating(shopId,billStatus);
+            if(eatingUsers.isEmpty()){
+                resp.respErr(MsgConstant.DATA_NULL);
+            }else {
+                List<CtmBill> ctmBills = new ArrayList();
+                for(Integer uid:eatingUsers){
+                    CtmBill cb = new CtmBill();
+                    List<BillInfo> bs = billInfoMapper.findUserBills(shopId,uid,billStatus);
+                    Date makeTime=new Date();
+                    Integer deskCode=0;
+                    Integer userId=0;
+                    Integer totalPay = 0;
+                    for(BillInfo b:bs){
+                        makeTime = b.getcTime();
+                        deskCode = b.getDeskCode();
+                        userId=b.getUserId();
+                        totalPay=totalPay+b.getTotalPrice();
+                    }
+                    cb.setBills(bs);
+                    cb.setDeskCode(deskCode);
+                    cb.setMakeTime(makeTime);
+                    cb.setTotalPay(totalPay);
+                    cb.setUserId(userId);
+                    ctmBills.add(cb);
+                }
+                resp.setRespData(ctmBills);
             }
 
         }

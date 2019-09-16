@@ -24,7 +24,7 @@ public interface FoodService {
 
     public void delOne(String eToken,Integer foodId, ApiResp resp);
 
-    public void canEat(Integer shopId, String eToken,ApiResp<List<MenuCate>> resp);
+    public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp);
 
     public void findAll(String eToken, ApiResp<List<FoodInfo>> resp);
 
