@@ -1,7 +1,10 @@
 package com.chunlei.eat.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.chunlei.eat.common.WxConfig;
+import com.chunlei.eat.model.resp.QrMsg;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -10,19 +13,20 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.CharArrayBuffer;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.ResponseEntity;
 
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Created by lcl on 2019/8/26 0026
@@ -205,6 +209,38 @@ public class Reqclient {
             }
         }
         return result;
+    }
+
+    /**
+     * 依赖工具来
+     * */
+    public static String getQrCode(String wxUrl,String fileName,QrMsg qrMsg){
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(wxUrl);
+        httpPost.setHeader("Accept", "application/json");
+        httpPost.setHeader("Content-Type", "application/json");
+        StringEntity entity = new StringEntity(JSON.toJSONString(qrMsg), "UTF-8");
+        httpPost.setEntity(entity);
+        CloseableHttpResponse response = null;
+        InputStream inputStream;
+        String webUrl=null;
+        try {
+            response = httpClient.execute(httpPost);
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                inputStream = response.getEntity().getContent();
+                OSSClientUtil oSSClientUtil = new OSSClientUtil();
+                webUrl = oSSClientUtil.uploadFileTurnUrl(inputStream,fileName);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                response.close();
+                httpClient.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return webUrl;
     }
 
 }
