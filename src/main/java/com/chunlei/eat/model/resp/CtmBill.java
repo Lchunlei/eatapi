@@ -11,6 +11,7 @@ import java.util.List;
 public class CtmBill {
     private Integer totalPay;
     private Integer userId;
+    private Integer shopId;
     private Integer deskCode;
     private Date makeTime;
     private List<BillInfo> bills;
@@ -24,6 +25,14 @@ public class CtmBill {
                 ", makeTime=" + makeTime +
                 ", bills=" + bills +
                 '}';
+    }
+
+    public Integer getShopId() {
+        return shopId;
+    }
+
+    public void setShopId(Integer shopId) {
+        this.shopId = shopId;
     }
 
     public Integer getTotalPay() {

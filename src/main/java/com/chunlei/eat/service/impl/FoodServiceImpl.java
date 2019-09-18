@@ -2,7 +2,9 @@ package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.FoodInfo;
+import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.mapper.FoodMapper;
+import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
 import com.chunlei.eat.model.resp.MenuCate;
@@ -34,6 +36,8 @@ public class FoodServiceImpl implements FoodService {
     }
     @Autowired
     private FoodMapper foodMapper;
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public void addFood(FoodInfo foodInfo, ApiResp resp) {
@@ -124,11 +128,10 @@ public class FoodServiceImpl implements FoodService {
     @Override
     public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp) {
         if(shopId ==0 ){
+            //代客下单
             shopId = TokenUtil.getSidByToken(eToken);
-            if(shopId==null){
-                shopId=0;
-            }
         }
+        ShopInfo shopInfo = shopMapper.findShopById(shopId);
         List<MenuCate> menuCates = new ArrayList();
         for(int i=1;i<6;i++){
             List<FoodInfo> foodInfos = foodMapper.findCanEatBycateId(shopId,i);
@@ -137,6 +140,7 @@ public class FoodServiceImpl implements FoodService {
                 menuCates.add(cate);
             }
         }
+        resp.setRespMsg(shopInfo.getShopName());
         if(menuCates.isEmpty()){
             resp.respErr(MsgConstant.FOOD_NULL);
         }else {

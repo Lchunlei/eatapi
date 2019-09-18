@@ -19,7 +19,7 @@ public class WxQrcodeUtil {
 //            System.out.println("ACCESS_TOKEN过期！！重试获取....");
 //            ACCESS_TOKEN = Reqclient.getWxAuth();
 //            wxQrUrl = WX_QR_URL.replace("ACCESS_TOKEN",ACCESS_TOKEN);
-//            qrImgUrl = Reqclient.getQrCode(wxQrUrl,scene+".png", qrMsg);
+//            qrImgUrl = Reqclient.getQrCode(wxQrUrl,scene+"desk.png", qrMsg);
 //        }
         String qrImgUrl = "http://file.51yuxian.com/DD48E4A2F75144E89FCABA679FFD8A6F.jpg";
         return qrImgUrl;

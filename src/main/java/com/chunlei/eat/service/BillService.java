@@ -22,5 +22,9 @@ public interface BillService {
 
     public void ctmBill(Integer billStatus,String eToken, ApiResp<List<CtmBill>> resp);
 
+    public void delUserBill(Integer userId,String eToken,ApiResp resp);
+
+    public void completeUserBill(Integer userId,String eToken,ApiResp resp);
+
 
 }

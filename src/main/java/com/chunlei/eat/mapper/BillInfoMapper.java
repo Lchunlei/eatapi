@@ -46,5 +46,11 @@ public interface BillInfoMapper {
     @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY cTime")
     List<Integer> findUsersEating(@Param("shopId")Integer shopId,@Param("billStatus")Integer billStatus);
 
+    @Delete("DELETE FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='0' AND userId=#{userId}")
+    int delUserBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
+
+    @Update("UPDATE bill_today_info SET billStatus='1' WHERE shopId=#{shopId} AND billStatus='0' AND userId=#{userId}")
+    int completeBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
+
 
 }

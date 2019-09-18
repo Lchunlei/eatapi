@@ -88,6 +88,26 @@ public class BillController {
         return resp;
     }
 
+    @RequestMapping(value = "/del",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="本店用户订单删除", notes="本店用户订单删除")
+    public ApiResp delUserBill(@RequestParam String eToken,@RequestParam Integer userId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----本店用户订单删除---->"+eToken+"-->"+userId);
+        billService.delUserBill(userId,eToken,resp);
+        log.info("\n-----本店用户订单删除resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/complete",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="本店用户订单交易完成", notes="本店用户订单交易完成")
+    public ApiResp completeUserBill(@RequestParam String eToken,@RequestParam Integer userId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----交易完成---->"+eToken+"-->"+userId);
+        billService.completeUserBill(userId,eToken,resp);
+        log.info("\n-----交易完成resp---->"+resp);
+        return resp;
+    }
+
 
 
 }

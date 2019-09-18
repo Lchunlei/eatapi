@@ -140,11 +140,46 @@ public class BillServiceImpl implements BillService {
                     cb.setMakeTime(makeTime);
                     cb.setTotalPay(totalPay);
                     cb.setUserId(userId);
+                    cb.setShopId(shopId);
                     ctmBills.add(cb);
                 }
                 resp.setRespData(ctmBills);
             }
 
+        }
+    }
+
+    @Override
+    public void delUserBill(Integer userId, String eToken, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            if(userId==0){
+                resp.respErr("代客下单不可删除！");
+            }else {
+                int i = billInfoMapper.delUserBills(shopId,userId);
+                if(i==0){
+                    resp.respErr(MsgConstant.OPE_ERR);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void completeUserBill(Integer userId, String eToken, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            if(userId==0){
+                resp.respErr("代客下单不可一键完成！");
+            }else {
+                int i = billInfoMapper.completeBills(shopId,userId);
+                if(i==0){
+                    resp.respErr(MsgConstant.OPE_ERR);
+                }
+            }
         }
     }
 

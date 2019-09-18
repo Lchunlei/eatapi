@@ -5,8 +5,8 @@ package com.chunlei.eat.common;
  */
 public class WxConfig {
 
-    public static final String WX_OPENID_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=wx8523038136e2c360&secret=a478170034952b051154ab29dd89e149&js_code=CODE&grant_type=authorization_code";
+    public static final String WX_OPENID_URL = "https://api.weixin.qq.com/sns/jscode2session?appid=wx4d9d0dd11e726af3&secret=a1477410f65c673f55f441ab12505744&js_code=CODE&grant_type=authorization_code";
 
-    public static final String WX_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx8523038136e2c360&secret=a478170034952b051154ab29dd89e149";
+    public static final String WX_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d9d0dd11e726af3&secret=a1477410f65c673f55f441ab12505744";
 
 }
