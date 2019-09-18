@@ -9,7 +9,6 @@ public class QrCode {
     private Integer qrId;
     private Integer shopId;
     private Integer deskCode;
-    private String qrUrl;
     private Date cTime;
 
     @Override
@@ -18,7 +17,6 @@ public class QrCode {
                 "qrId=" + qrId +
                 ", shopId=" + shopId +
                 ", deskCode=" + deskCode +
-                ", qrUrl='" + qrUrl + '\'' +
                 ", cTime=" + cTime +
                 '}';
     }
@@ -26,10 +24,8 @@ public class QrCode {
     public QrCode() {
     }
 
-    public QrCode(Integer shopId, Integer deskCode, String qrUrl) {
-        this.shopId = shopId;
-        this.deskCode = deskCode;
-        this.qrUrl = qrUrl;
+    public QrCode(Integer qrId) {
+        this.qrId = qrId;
     }
 
     public Integer getQrId() {
@@ -54,14 +50,6 @@ public class QrCode {
 
     public void setDeskCode(Integer deskCode) {
         this.deskCode = deskCode;
-    }
-
-    public String getQrUrl() {
-        return qrUrl;
-    }
-
-    public void setQrUrl(String qrUrl) {
-        this.qrUrl = qrUrl;
     }
 
     public Date getcTime() {

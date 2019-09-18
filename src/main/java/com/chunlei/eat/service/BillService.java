@@ -18,11 +18,15 @@ public interface BillService {
 
     public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
 
-    public void getBills(Integer billStatus,String eToken, ApiResp<List<BillInfo>> resp);
+    public void getBills(Integer tabNum,String eToken, ApiResp<List<BillInfo>> resp);
 
     public void ctmBill(Integer billStatus,String eToken, ApiResp<List<CtmBill>> resp);
 
     public void delUserBill(Integer userId,String eToken,ApiResp resp);
+
+    public void delOneBill(Integer billId,String eToken,ApiResp resp);
+
+    public void sendDishe(Integer billId,String eToken,ApiResp resp);
 
     public void completeUserBill(Integer userId,String eToken,ApiResp resp);
 

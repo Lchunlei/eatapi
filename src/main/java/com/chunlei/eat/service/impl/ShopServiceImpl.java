@@ -81,9 +81,8 @@ public class ShopServiceImpl implements ShopService {
         }
     }
 
-    //升级为VIP/续费
+    //升级为VIP/续费缴费记录提交
     @Override
-    @Transactional
     public void renewVip(VipPay vipPay, ApiResp apiResp){
         Integer sId = TokenUtil.getSidByToken(vipPay.geteToken());
         if(sId==null){
@@ -94,7 +93,7 @@ public class ShopServiceImpl implements ShopService {
             vipPay.setShopId(shop.getShopId());
             vipPay.setShopName(shop.getShopName());
             vipPayMapper.insertOne(vipPay);
-            shopMapper.updateVip(1,shop.getShopId());
+//            shopMapper.updateVip(1,shop.getShopId());
         }
     }
 

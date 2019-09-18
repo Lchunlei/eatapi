@@ -24,13 +24,23 @@ public class QrController {
     @Autowired
     private QrCodeService qrCodeService;
 
-    @RequestMapping(value = "/make",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value="申领桌码", notes="申领桌码")
-    public ApiResp make(@RequestParam String eToken,@RequestParam Integer qrTotal){
+    @RequestMapping(value = "/binding",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="绑定桌码", notes="绑定桌码")
+    public ApiResp binding(@RequestParam String eToken,@RequestParam Integer deskCode,@RequestParam Integer qrId){
         ApiResp resp = new ApiResp();
-        log.info("\n-----申领桌码---->"+eToken+"-->"+qrTotal);
-        qrCodeService.addShopQr(eToken,qrTotal,resp);
-        log.info("\n-----申领桌码resp---->"+resp);
+        log.info("\n-----绑定桌码---->"+eToken+"-->"+deskCode+"-->"+qrId);
+        qrCodeService.binding(eToken,deskCode,qrId,resp);
+        log.info("\n-----绑定桌码resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/content",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="获取二维码内容", notes="获取二维码内容")
+    public ApiResp qrContent(@RequestParam Integer qrId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----获取二维码内容---->"+qrId);
+        qrCodeService.qrContent(qrId,resp);
+        log.info("\n-----获取二维码内容resp---->"+resp);
         return resp;
     }
 
@@ -41,6 +51,16 @@ public class QrController {
         log.info("\n-----我的所有桌码---->"+eToken);
         qrCodeService.findMyQrs(eToken,resp);
         log.info("\n-----我的所有桌码resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/preMake",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="预生成桌牌", notes="预生成桌牌")
+    public ApiResp preMake(@RequestParam String pwd){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----预生成桌牌---->"+pwd);
+        qrCodeService.preMake(pwd,resp);
+        log.info("\n-----预生成桌牌resp---->"+resp);
         return resp;
     }
 

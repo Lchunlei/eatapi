@@ -22,29 +22,24 @@ public class QrCodeServiceImpl implements QrCodeService {
     private QrCodeMapper qrCodeMapper;
 
     @Override
-    public void addShopQr(String eToken, Integer qrTotal, ApiResp resp) {
+    public void binding(String eToken, Integer deskCode,Integer qrId, ApiResp resp) {
         Integer sId = TokenUtil.getSidByToken(eToken);
         if(sId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            String errMsg = "您店铺专属桌码已达20上限，请联系客服修改！";
             List<QrCode> qrCodes = qrCodeMapper.findShopAllQr(sId);
-            if(qrCodes.size()>20){
-                resp.respErr(errMsg);
-            }else if((qrCodes.size()+qrTotal)>20){
-                resp.respErr(errMsg);
+            if(qrCodes.size()>19){
+                resp.respErr("您店铺专属桌码已达20上限，请联系客服修改！");
             }else {
-                //生成指定店铺二维码
-                int sdeskCode = 1;
-                if(!qrCodes.isEmpty()){
-                    sdeskCode = qrCodes.get(qrCodes.size()-1).getDeskCode()+1;
-                }
-                for(int i=0;i<qrTotal;i++){
-                    String imgUrl = WxQrcodeUtil.getQr(sId+"-"+(sdeskCode+i));
-                    if(!StringTool.isBlank(imgUrl)){
-                        QrCode q = new QrCode(sId,sdeskCode+i,imgUrl);
-                        qrCodeMapper.insertOne(q);
+                //开始绑定桌码
+                QrCode nQr = qrCodeMapper.findQrById(qrId);
+                if(nQr.getShopId()==null){
+                    int i = qrCodeMapper.binding(qrId,sId,deskCode);
+                    if(i!=1){
+                        resp.respErr(MsgConstant.OPE_ERR);
                     }
+                }else {
+                    resp.respErr("二维码被占用，绑定失败");
                 }
             }
         }
@@ -63,6 +58,47 @@ public class QrCodeServiceImpl implements QrCodeService {
                 resp.setRespData(qrCodes);
             }
         }
+    }
+
+    @Override
+    public void qrContent(Integer qrId, ApiResp<QrCode> resp) {
+        QrCode qrCode = qrCodeMapper.findQrById(qrId);
+        if(qrCode==null||qrCode.getShopId()==null){
+            resp.respErr(MsgConstant.DATA_NULL);
+        }else {
+            resp.setRespData(qrCode);
+        }
+    }
+
+    @Override
+    public void preMake(String pwd, ApiResp resp) {
+        if("zyilcl".equals(pwd)){
+            Integer maxId = qrCodeMapper.findMaxId();
+            if(maxId==null){
+                maxId=0;
+            }
+            for(int i=1;i<101;i++){
+                int j = maxId+i;
+                try {
+                    Boolean re = WxQrcodeUtil.getQr(""+j);
+                    if(re){
+                        QrCode q = new QrCode(j);
+                        qrCodeMapper.insertOne(q);
+                    }else {
+                        System.out.println("生成第"+j+"个失败！");
+                    }
+                }catch (Exception e){
+                    e.printStackTrace();
+                    System.out.println("生成第"+j+"个出现异常！！！！！！");
+                    try {
+                        Thread.sleep(3000);
+                    }catch (Exception ex){
+
+                    }
+                }
+            }
+        }
+
     }
 
 

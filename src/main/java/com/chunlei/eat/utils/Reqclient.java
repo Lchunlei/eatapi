@@ -214,7 +214,7 @@ public class Reqclient {
     /**
      * 依赖工具来
      * */
-    public static String getQrCode(String wxUrl,String fileName,QrMsg qrMsg){
+    public static Boolean getQrCode(String wxUrl,String fileName,QrMsg qrMsg){
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(wxUrl);
         httpPost.setHeader("Accept", "application/json");
@@ -223,13 +223,22 @@ public class Reqclient {
         httpPost.setEntity(entity);
         CloseableHttpResponse response = null;
         InputStream inputStream;
-        String webUrl=null;
         try {
             response = httpClient.execute(httpPost);
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 inputStream = response.getEntity().getContent();
-                OSSClientUtil oSSClientUtil = new OSSClientUtil();
-                webUrl = oSSClientUtil.uploadFileTurnUrl(inputStream,fileName);
+                File file=new File("/usr/local/qr/wpzg/"+fileName);
+                FileOutputStream out = null;
+                if (!file.exists()){
+                    file.createNewFile();
+                }
+                out=new FileOutputStream(file);
+                int len = 0;
+                byte[] buf = new byte[1024];
+                while ((len = inputStream.read(buf, 0, 512)) != -1) {
+                    out.write(buf, 0, len);
+                }
+                out.flush();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,9 +247,11 @@ public class Reqclient {
                 httpClient.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
+                return false;
             }
+            return false;
         }
-        return webUrl;
+        return true;
     }
 
 }

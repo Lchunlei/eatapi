@@ -65,48 +65,24 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void getBills(Integer billStatus,String eToken, ApiResp<List<BillInfo>> resp) {
+    public void getBills(Integer tabNum,String eToken, ApiResp<List<BillInfo>> resp) {
         Integer shopId = TokenUtil.getSidByToken(eToken);
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            if(billStatus==null){
-
-            }else if(billStatus.equals(0)){
-                //待处理客单
-//                List<Integer> eatingUsers = billInfoMapper.findUsersEating(shopId,billStatus);
-//                if(eatingUsers.isEmpty()){
-//                    resp.respErr(MsgConstant.DATA_NULL);
-//                }else {
-//                    List<BillInfo> billInfos = new ArrayList();
-//                    for(Integer uid:eatingUsers){
-//                        List<BillInfo> bs = billInfoMapper.findUserBills(shopId,uid,billStatus);
-//                        billInfos.addAll(bs);
-//                    }
-//                    resp.setRespData(billInfos);
-//                }
-
-            }else if(billStatus.equals(1)){
+            List<BillInfo> billInfos;
+            if(tabNum.equals(1)){
                 //待出餐
-                List<BillInfo> billInfos = billInfoMapper.findOutBills(shopId,billStatus);
-                if(billInfos.isEmpty()){
-                    resp.respErr(MsgConstant.DATA_NULL);
-                }else {
-                    resp.setRespData(billInfos);
-                }
-            }else if(billStatus.equals(2)){
-                //月全部订单
-                List<BillInfo> billInfos = billInfoMapper.findAllBills(shopId);
-                if(billInfos.isEmpty()){
-                    resp.respErr(MsgConstant.DATA_NULL);
-                }else {
-                    resp.setRespData(billInfos);
-                }
-            }else if(billStatus.equals(3)){
-                //历史全部订单
-
+                billInfos = billInfoMapper.findOutBills(shopId,0);
+            }else {
+                //全部
+                billInfos = billInfoMapper.findAllBills(shopId);
             }
-
+            if(billInfos.isEmpty()){
+                resp.respErr(MsgConstant.DATA_NULL);
+            }else {
+                resp.setRespData(billInfos);
+            }
         }
     }
 
@@ -162,6 +138,32 @@ public class BillServiceImpl implements BillService {
                 if(i==0){
                     resp.respErr(MsgConstant.OPE_ERR);
                 }
+            }
+        }
+    }
+
+    @Override
+    public void delOneBill(Integer billId, String eToken, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            int i = billInfoMapper.delById(billId);
+            if(i==0){
+                resp.respErr(MsgConstant.OPE_ERR);
+            }
+        }
+    }
+
+    @Override
+    public void sendDishe(Integer billId, String eToken, ApiResp resp) {
+        Integer shopId = TokenUtil.getSidByToken(eToken);
+        if(shopId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            int i = billInfoMapper.updateStatus(billId,1);
+            if(i==0){
+                resp.respErr(MsgConstant.OPE_ERR);
             }
         }
     }

@@ -10,9 +10,12 @@ import java.util.List;
  */
 public interface QrCodeService {
 
-    public void addShopQr(String eToken,Integer qrTotal,ApiResp resp);
+    public void binding(String eToken,Integer deskCode,Integer qrId,ApiResp resp);
 
     public void findMyQrs(String eToken, ApiResp<List<QrCode>> resp);
 
+    public void qrContent(Integer qrId, ApiResp<QrCode> resp);
+
+    public void preMake(String pwd, ApiResp resp);
 
 }

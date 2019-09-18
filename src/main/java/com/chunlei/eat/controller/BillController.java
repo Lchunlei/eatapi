@@ -68,10 +68,10 @@ public class BillController {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="查看本店订单列表", notes="查看本店订单列表")
-    public ApiResp<List<BillInfo>> list(@RequestParam(required = false) Integer billStatus, @RequestParam String eToken){
+    public ApiResp<List<BillInfo>> list(@RequestParam(required = false) Integer tabNum, @RequestParam String eToken){
         ApiResp resp = new ApiResp();
-        log.info("\n-----查看本店订单列表---->"+billStatus+"-->"+eToken);
-        billService.getBills(billStatus,eToken,resp);
+        log.info("\n-----查看本店订单列表---->"+tabNum+"-->"+eToken);
+        billService.getBills(tabNum,eToken,resp);
         log.info("\n-----查看本店订单列表resp---->"+resp);
         return resp;
     }
@@ -95,6 +95,26 @@ public class BillController {
         log.info("\n-----本店用户订单删除---->"+eToken+"-->"+userId);
         billService.delUserBill(userId,eToken,resp);
         log.info("\n-----本店用户订单删除resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/delOne",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="订单删除", notes="订单删除")
+    public ApiResp delOneBill(@RequestParam String eToken,@RequestParam Integer billId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----订单删除---->"+eToken+"-->"+billId);
+        billService.delOneBill(billId,eToken,resp);
+        log.info("\n-----订单删除resp---->"+resp);
+        return resp;
+    }
+
+    @RequestMapping(value = "/sendDishe",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="上菜完成", notes="上菜完成")
+    public ApiResp sendDishe(@RequestParam String eToken,@RequestParam Integer billId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----上菜完成---->"+eToken+"-->"+billId);
+        billService.sendDishe(billId,eToken,resp);
+        log.info("\n-----上菜完成resp---->"+resp);
         return resp;
     }
 

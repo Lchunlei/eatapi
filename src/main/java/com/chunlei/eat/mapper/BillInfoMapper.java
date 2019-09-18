@@ -15,7 +15,7 @@ public interface BillInfoMapper {
     @Insert("INSERT INTO bill_today_info(`userId`, `shopId`,`deskCode`, `foodId`, `foodName`, `eatNum`, `totalPrice`, `cTime`) VALUES (#{userId},#{shopId},#{deskCode},#{foodId},#{foodName},#{eatNum},#{totalPrice},NOW())")
     int insertOne(BillInfo billInfo);
 
-    @Delete("DELETE FROM bill_today_info WHERE billId=#{billId}")
+    @Delete("DELETE FROM bill_today_info WHERE billId=#{billId} AND billStatus='0'")
     int delById(Integer billId);
 
     //查看当前点餐排名
