@@ -21,6 +21,9 @@ public interface QrCodeMapper {
     @Select("SELECT * FROM shop_qr WHERE shopId=#{shopId} ORDER BY deskCode")
     List<QrCode> findShopAllQr(@Param("shopId") Integer shopId);
 
+    @Select("SELECT COUNT(qrId) FROM shop_qr WHERE shopId=#{shopId}")
+    Integer findShopQrTotal(@Param("shopId") Integer shopId);
+
     @Select("SELECT * FROM shop_qr WHERE qrId=#{qrId}")
     QrCode findQrById(@Param("qrId") Integer qrId);
 

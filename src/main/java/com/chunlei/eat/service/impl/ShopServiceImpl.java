@@ -3,6 +3,7 @@ package com.chunlei.eat.service.impl;
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.entity.VipPay;
+import com.chunlei.eat.mapper.QrCodeMapper;
 import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.mapper.VipPayMapper;
 import com.chunlei.eat.model.ApiResp;
@@ -25,6 +26,8 @@ public class ShopServiceImpl implements ShopService {
     private ShopMapper shopMapper;
     @Autowired
     private VipPayMapper vipPayMapper;
+    @Autowired
+    private QrCodeMapper qrCodeMapper;
 
     //用户主动登录
     @Override
@@ -104,6 +107,12 @@ public class ShopServiceImpl implements ShopService {
             apiResp.respErr(MsgConstant.NOT_LOGIN);
         }else {
             ShopInfo shop = shopMapper.findShopById(sId);
+            shop.setWxOpenId(null);
+            shop.setShopId(null);
+            Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
+            if(qrTotal!=null){
+                shop.setQrTotal(qrTotal);
+            }
             apiResp.setRespData(shop);
         }
     }

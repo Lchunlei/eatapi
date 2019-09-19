@@ -24,6 +24,9 @@ public class ShopInfo {
     private Date expireTime;
     private Date cTime;
 
+    private Integer staffTotal;
+    private Integer qrTotal;
+
     @Override
     public String toString() {
         return "ShopInfo{" +
@@ -45,6 +48,22 @@ public class ShopInfo {
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public Integer getStaffTotal() {
+        return staffTotal;
+    }
+
+    public void setStaffTotal(Integer staffTotal) {
+        this.staffTotal = staffTotal;
+    }
+
+    public Integer getQrTotal() {
+        return qrTotal;
+    }
+
+    public void setQrTotal(Integer qrTotal) {
+        this.qrTotal = qrTotal;
     }
 
     public String getProvince() {

@@ -27,8 +27,8 @@ public class QrCodeServiceImpl implements QrCodeService {
         if(sId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            List<QrCode> qrCodes = qrCodeMapper.findShopAllQr(sId);
-            if(qrCodes.size()>19){
+            Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
+            if(qrTotal!=null && qrTotal>19){
                 resp.respErr("您店铺专属桌码已达20上限，请联系客服修改！");
             }else {
                 //开始绑定桌码
