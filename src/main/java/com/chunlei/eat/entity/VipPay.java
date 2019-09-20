@@ -10,6 +10,8 @@ public class VipPay {
     private Integer shopId;
     private String shopName;
     private Integer payType;//1微信2支付宝3系统赠送
+    private Integer getStatus;//0未审核1已审核
+    private Integer vipday;
     private String payNum;
     private Integer payValue;
     private String useRemark;
@@ -30,6 +32,22 @@ public class VipPay {
                 ", cTime=" + cTime +
                 ", eToken='" + eToken + '\'' +
                 '}';
+    }
+
+    public Integer getVipday() {
+        return vipday;
+    }
+
+    public void setVipday(Integer vipday) {
+        this.vipday = vipday;
+    }
+
+    public Integer getGetStatus() {
+        return getStatus;
+    }
+
+    public void setGetStatus(Integer getStatus) {
+        this.getStatus = getStatus;
     }
 
     public String geteToken() {

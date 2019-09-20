@@ -10,6 +10,8 @@ public class UserInfo {
     private String wxOpenId;
     private Integer billId;
     private Integer shopId;
+    private Integer myShopId;
+    private Integer shopRole;//1服务员2厨师
     private Date uTime;
 
     @Override
@@ -21,6 +23,22 @@ public class UserInfo {
                 ", shopId=" + shopId +
                 ", uTime=" + uTime +
                 '}';
+    }
+
+    public Integer getMyShopId() {
+        return myShopId;
+    }
+
+    public void setMyShopId(Integer myShopId) {
+        this.myShopId = myShopId;
+    }
+
+    public Integer getShopRole() {
+        return shopRole;
+    }
+
+    public void setShopRole(Integer shopRole) {
+        this.shopRole = shopRole;
     }
 
     public Integer getUserId() {

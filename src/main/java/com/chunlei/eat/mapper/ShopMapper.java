@@ -5,6 +5,8 @@ import com.chunlei.eat.sql.ShopSql;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
+
 /**
  * @Created by lcl on 2019/8/22 0022
  */
@@ -28,6 +30,9 @@ public interface ShopMapper {
 
     @Update("UPDATE shop_info SET vipStatus=#{vipStatus} WHERE shopId=#{shopId}")
     int updateVip(@Param("vipStatus")Integer vipStatus,@Param("shopId")Integer shopId);
+
+    @Update("UPDATE shop_info SET vipStatus=#{vipStatus},expireTime=#{expireTime} WHERE shopId=#{shopId}")
+    int updateVipDate(@Param("vipStatus")Integer vipStatus, @Param("expireTime") Date expireTime, @Param("shopId")Integer shopId);
 
     @UpdateProvider(type= ShopSql.class, method="updateSql")
     int updateBathInfo(ShopInfo shopInfo);

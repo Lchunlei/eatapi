@@ -19,7 +19,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/bill")
-@Api(value = "客户下单")
+@Api(value = "bill",tags = "客户下单")
 public class BillController {
     private static final Logger log = LoggerFactory.getLogger(BillController.class);
     @Autowired

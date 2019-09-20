@@ -16,5 +16,13 @@ public class DateTool {
         return calendar.getTime();
     }
 
+    //比较时间是否大于当前时间
+//    public static Date addDay(Date date, int day) {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(date);
+//        calendar.add(Calendar.DAY_OF_MONTH, day);
+//        return calendar.getTime();
+//    }
+
 
 }

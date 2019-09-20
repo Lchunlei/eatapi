@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/banner")
-@Api(value = "轮播图")
+@Api(value = "banner",tags = "轮播图")
 public class BannerController {
     private static final Logger log = LoggerFactory.getLogger(BannerController.class);
     @Autowired

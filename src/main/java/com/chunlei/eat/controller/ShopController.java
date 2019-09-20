@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/shop")
-@Api(value = "店铺操作")
+@Api(value = "shop",tags = "店铺操作")
 public class ShopController {
     private static final Logger log = LoggerFactory.getLogger(ShopController.class);
     @Autowired

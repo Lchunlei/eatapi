@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/qr")
-@Api(value = "店铺二维码")
+@Api(value = "qr",tags = "店铺二维码")
 public class QrController {
     private static final Logger log = LoggerFactory.getLogger(QrController.class);
     @Autowired

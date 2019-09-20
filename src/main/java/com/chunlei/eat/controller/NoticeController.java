@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/notice")
-@Api(value = "系统公告")
+@Api(value = "notice",tags = "系统公告")
 public class NoticeController {
     private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
     @Autowired

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/food")
-@Api(value = "菜谱操作")
+@Api(value = "food",tags = "菜谱操作")
 public class FoodController {
     private static final Logger log = LoggerFactory.getLogger(FoodController.class);
     @Autowired
