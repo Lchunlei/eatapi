@@ -39,6 +39,9 @@ public interface BillInfoMapper {
     @Select("SELECT * FROM bill_today_info WHERE userId=#{userId} AND billStatus=#{billStatus}")
     List<BillInfo> findMyBills(@Param("userId")Integer userId,@Param("billStatus")Integer billStatus);
 
+    @Select("SELECT * FROM bill_today_info WHERE userId=#{userId} AND billStatus IN('0','1') ORDER BY billId DESC")
+    List<BillInfo> findMyWillEatBills(@Param("userId")Integer userId);
+
     @Update("UPDATE bill_today_info SET billStatus=#{billStatus} WHERE billId=#{billId}")
     int updateStatus(@Param("billId")Integer billId,@Param("billStatus")Integer billStatus);
 

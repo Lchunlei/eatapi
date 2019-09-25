@@ -3,11 +3,16 @@ package com.chunlei.eat.service.impl;
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.entity.FoodInfo;
+import com.chunlei.eat.entity.QrCode;
+import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.mapper.BillInfoMapper;
 import com.chunlei.eat.mapper.FoodMapper;
+import com.chunlei.eat.mapper.QrCodeMapper;
+import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.model.resp.CtmBill;
+import com.chunlei.eat.model.resp.UserRate;
 import com.chunlei.eat.service.BillService;
 import com.chunlei.eat.utils.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,40 +32,75 @@ public class BillServiceImpl implements BillService {
     private BillInfoMapper billInfoMapper;
     @Autowired
     private FoodMapper foodMapper;
+    @Autowired
+    private QrCodeMapper qrCodeMapper;
+    @Autowired
+    private ShopMapper shopMapper;
 
+    /**
+     * 通过菜谱下单
+     * */
     @Override
     @Transactional
     public void makeBill(MakeOrder makeOrder, ApiResp resp) {
         Integer uid = TokenUtil.getUidByToken(makeOrder.geteToken());
         Integer sid = TokenUtil.getSidByToken(makeOrder.geteToken());
-        if(uid==null&&sid!=null){
-            //商家代客下单
-            uid = 0;
-        }
-        for(FoodInfo b:makeOrder.getBillInfos()){
-            FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-            if(foodInfo.getShopId().equals(makeOrder.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
-                //菜单校验完毕，入库
-                BillInfo billInfo = new BillInfo(uid,foodInfo.getShopId(),makeOrder.getDeskCode(),foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
-                billInfoMapper.insertOne(billInfo);
-            }else {
-                resp.respErr(MsgConstant.OPE_ERR);
-            }
-        }
 
-        if(!resp.getRespCode().equals("R000")){
-            throw new RuntimeException("菜品信息不合规！！");
+        if(makeOrder.getShopId()==null||makeOrder.getShopId().equals(0)){
+            //没有扫桌码直接下单、只允许商家自己下单，顾客必须扫码下单
+            if(sid==null){
+                //商家带客下单,商家没有登录
+                resp.respErr(MsgConstant.NOT_LOGIN);
+            }else {
+                //商家代客下单
+                ShopInfo shopInfo = shopMapper.findShopById(sid);
+                for(FoodInfo b:makeOrder.getBillInfos()){
+                    FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                    if(shopInfo.getShopId().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                        //菜单校验完毕，入库
+                        BillInfo billInfo = new BillInfo(uid,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                        billInfoMapper.insertOne(billInfo);
+                    }else {
+                        resp.respErr(MsgConstant.OPE_ERR);
+                        throw new RuntimeException("菜品信息不合规！！");
+                    }
+                }
+            }
+        }else {
+            //扫了桌码下单
+            QrCode qrCode = qrCodeMapper.findQrById(makeOrder.getShopId());
+            for(FoodInfo b:makeOrder.getBillInfos()){
+                FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                if(foodInfo.getShopId().equals(qrCode.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                    //菜单校验完毕，入库
+                    BillInfo billInfo = new BillInfo(uid,qrCode.getShopId(),qrCode.getDeskCode(),foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                    billInfoMapper.insertOne(billInfo);
+                }else {
+                    resp.respErr(MsgConstant.OPE_ERR);
+                    throw new RuntimeException("菜品信息不合规！！");
+                }
+            }
         }
     }
 
     @Override
-    public void rate(Integer userId, ApiResp<Integer> resp) {
-        List<BillInfo> billInfos = billInfoMapper.findMyBills(userId,1);
+    public void rate(Integer userId, ApiResp<UserRate> resp) {
+
+        List<BillInfo> billInfos = billInfoMapper.findMyWillEatBills(userId);
         if(billInfos.isEmpty()){
-            resp.respErr("您的菜已上齐，如有疑问请咨询店家！");
+            resp.respErr(MsgConstant.DATA_NULL);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(billInfos.get(0).getShopId());
+
             Integer rate = billInfoMapper.findRate(billInfos.get(0).getShopId(),billInfos.get(0).getBillId());
-            resp.setRespData(rate);
+            int total = 0;
+            for(BillInfo b:billInfos){
+                if(b.getShopId().equals(shopInfo.getShopId())){
+                    total = b.getTotalPrice() + total;
+                }
+            }
+            UserRate userRate = new UserRate(shopInfo.getShopName(),rate,total,billInfos);
+            resp.setRespData(userRate);
         }
     }
 

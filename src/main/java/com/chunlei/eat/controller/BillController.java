@@ -4,6 +4,7 @@ import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.model.resp.CtmBill;
+import com.chunlei.eat.model.resp.UserRate;
 import com.chunlei.eat.service.BillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -38,8 +39,8 @@ public class BillController {
 
     @RequestMapping(value = "/rate",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="当前等餐排名", notes="当前等餐排名")
-    public ApiResp rate(@RequestParam Integer userId){
-        ApiResp resp = new ApiResp();
+    public ApiResp<UserRate> rate(@RequestParam Integer userId){
+        ApiResp<UserRate> resp = new ApiResp();
         log.info("\n-----当前等餐排名---->"+userId);
         billService.rate(userId,resp);
         log.info("\n-----当前等餐排名resp---->"+resp);

@@ -1,6 +1,7 @@
 package com.chunlei.eat.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chunlei.eat.common.WxConfig;
 import com.chunlei.eat.model.resp.QrMsg;
 import org.apache.http.HttpEntity;
@@ -37,10 +38,11 @@ public class Reqclient {
         String reqUrl = WxConfig.WX_OPENID_URL.replace("CODE",code);
         return getReq(reqUrl);
     }
-
+    //"access_token":"25_bg1bH8Vj3ajLu1X7ynv5OdP8nXvv2CV12t7_9HZ2ZkJgmmXUb7zgrvZfcxaFC2O2Dpu2jK3tc3lUNdyqWRJI4LscPxCHPfkVuHtcC2kGCL-XxPAIcRKqO3oH-DsgpDjL_SRUuet_EEBjdf0-CKIjAFARZX","expires_in":7200}
     public static String getWxAuth(){
         String reqUrl = WxConfig.WX_ACCESS_TOKEN_URL;
-        return getReq(reqUrl);
+        String resu = getReq(reqUrl);
+        return JSONObject.parseObject(resu).getString("access_token");
     }
 
     /**
@@ -223,18 +225,19 @@ public class Reqclient {
         httpPost.setEntity(entity);
         CloseableHttpResponse response = null;
         InputStream inputStream;
+        FileOutputStream out = null;
         try {
             response = httpClient.execute(httpPost);
+//            System.out.println(EntityUtils.toString(response.getEntity(), "UTF-8"));
             if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 inputStream = response.getEntity().getContent();
                 File file=new File("/usr/local/qr/wpzg/"+fileName);
-                FileOutputStream out = null;
                 if (!file.exists()){
                     file.createNewFile();
                 }
                 out=new FileOutputStream(file);
                 int len = 0;
-                byte[] buf = new byte[1024];
+                byte[] buf = new byte[512];
                 while ((len = inputStream.read(buf, 0, 512)) != -1) {
                     out.write(buf, 0, len);
                 }
@@ -250,6 +253,12 @@ public class Reqclient {
                 return false;
             }
             return false;
+        }finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return true;
     }

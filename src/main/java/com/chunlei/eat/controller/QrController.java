@@ -34,6 +34,16 @@ public class QrController {
         return resp;
     }
 
+    @RequestMapping(value = "/delbind",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="解绑桌码", notes="解绑桌码")
+    public ApiResp delBinding(@RequestParam String eToken,@RequestParam Integer qrId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----解绑桌码---->"+eToken+"-->"+qrId);
+        qrCodeService.delBinding(eToken,qrId,resp);
+        log.info("\n-----解绑桌码resp---->"+resp);
+        return resp;
+    }
+
     @RequestMapping(value = "/content",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="获取二维码内容", notes="获取二维码内容")
     public ApiResp qrContent(@RequestParam Integer qrId){

@@ -13,6 +13,7 @@ public class VipPay {
     private Integer getStatus;//0未审核1已审核
     private Integer vipday;
     private String payNum;
+    private String city;
     private Integer payValue;
     private String useRemark;
     private Date cTime;
@@ -32,6 +33,14 @@ public class VipPay {
                 ", cTime=" + cTime +
                 ", eToken='" + eToken + '\'' +
                 '}';
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getVipday() {

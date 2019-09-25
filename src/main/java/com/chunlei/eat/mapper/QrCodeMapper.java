@@ -33,4 +33,8 @@ public interface QrCodeMapper {
     @Update("UPDATE shop_qr SET shopId=#{shopId},deskCode=#{deskCode} WHERE qrId=#{qrId}")
     int binding(@Param("qrId") Integer qrId,@Param("shopId") Integer shopId,@Param("deskCode") Integer deskCode);
 
+    @Update("UPDATE shop_qr SET shopId=NULL,deskCode=NULL WHERE qrId=#{qrId}")
+    int delBinding(@Param("qrId") Integer qrId);
+
+
 }

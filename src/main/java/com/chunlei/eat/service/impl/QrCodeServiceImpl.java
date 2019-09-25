@@ -5,6 +5,7 @@ import com.chunlei.eat.entity.QrCode;
 import com.chunlei.eat.mapper.QrCodeMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.QrCodeService;
+import com.chunlei.eat.utils.Reqclient;
 import com.chunlei.eat.utils.StringTool;
 import com.chunlei.eat.utils.TokenUtil;
 import com.chunlei.eat.utils.WxQrcodeUtil;
@@ -46,6 +47,28 @@ public class QrCodeServiceImpl implements QrCodeService {
     }
 
     @Override
+    public void delBinding(String eToken,Integer qrId, ApiResp resp) {
+        Integer sId = TokenUtil.getSidByToken(eToken);
+        if(sId==null){
+            resp.respErr(MsgConstant.NOT_LOGIN);
+        }else {
+            QrCode myQr = qrCodeMapper.findQrById(qrId);
+            if(myQr!=null){
+                if(myQr.getShopId()==null||myQr.getShopId().equals(0)){
+                    resp.respErr("桌码没有绑定信息！！");
+                }else if(myQr.getShopId().equals(sId)){
+                    int i = qrCodeMapper.delBinding(qrId);
+                    if(i!=1){
+                        resp.respErr(MsgConstant.OPE_ERR);
+                    }
+                }
+            }else {
+                resp.respErr(MsgConstant.OPE_ERR);
+            }
+        }
+    }
+
+    @Override
     public void findMyQrs(String eToken, ApiResp<List<QrCode>> resp) {
         Integer sId = TokenUtil.getSidByToken(eToken);
         if(sId==null){
@@ -77,10 +100,11 @@ public class QrCodeServiceImpl implements QrCodeService {
             if(maxId==null){
                 maxId=0;
             }
-            for(int i=1;i<101;i++){
+            String accessToken = Reqclient.getWxAuth();
+            for(int i=1;i<1002;i++){
                 int j = maxId+i;
                 try {
-                    Boolean re = WxQrcodeUtil.getQr(""+j);
+                    Boolean re = WxQrcodeUtil.getQr(""+j,accessToken);
                     if(re){
                         QrCode q = new QrCode(j);
                         qrCodeMapper.insertOne(q);

@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
             }
         }else {
             String tolen = TokenUtil.getUtoken(userInfo.getUserId(),wxOpenId);
+            apiResp.setRespMsg(userInfo.getUserId().toString());
             apiResp.setRespData(tolen);
         }
     }

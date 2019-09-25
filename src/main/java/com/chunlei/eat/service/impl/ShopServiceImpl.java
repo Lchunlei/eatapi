@@ -8,6 +8,7 @@ import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.mapper.VipPayMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.ShopService;
+import com.chunlei.eat.utils.StringTool;
 import com.chunlei.eat.utils.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,6 +96,11 @@ public class ShopServiceImpl implements ShopService {
             //直接先开通VIP功能，其他修改等后台审核
             vipPay.setShopId(shop.getShopId());
             vipPay.setShopName(shop.getShopName());
+            if(StringTool.isBlank(shop.getDistrict())){
+                vipPay.setCity(shop.getProvince());
+            }else {
+                vipPay.setCity(shop.getCity());
+            }
             vipPayMapper.insertOne(vipPay);
 //            shopMapper.updateVip(1,shop.getShopId());
         }
@@ -108,7 +114,6 @@ public class ShopServiceImpl implements ShopService {
         }else {
             ShopInfo shop = shopMapper.findShopById(sId);
             shop.setWxOpenId(null);
-            shop.setShopId(null);
             Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
             if(qrTotal!=null){
                 shop.setQrTotal(qrTotal);

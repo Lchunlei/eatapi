@@ -2,8 +2,10 @@ package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.FoodInfo;
+import com.chunlei.eat.entity.QrCode;
 import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.mapper.FoodMapper;
+import com.chunlei.eat.mapper.QrCodeMapper;
 import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
@@ -38,6 +40,8 @@ public class FoodServiceImpl implements FoodService {
     private FoodMapper foodMapper;
     @Autowired
     private ShopMapper shopMapper;
+    @Autowired
+    private QrCodeMapper qrCodeMapper;
 
     @Override
     public void addFood(FoodInfo foodInfo, ApiResp resp) {
@@ -145,6 +149,17 @@ public class FoodServiceImpl implements FoodService {
             resp.respErr(MsgConstant.FOOD_NULL);
         }else {
             resp.setRespData(menuCates);
+        }
+    }
+
+    @Override
+    public void deskCodeInfo(Integer qrId, String eToken, ApiResp<List<MenuCate>> resp) {
+        //如果没有桌码ID，就直接返回本店的菜谱
+        QrCode tQr = qrCodeMapper.findQrById(qrId);
+        if(tQr==null||tQr.getShopId()==null){
+            canEat(0,eToken,resp);
+        }else {
+            canEat(tQr.getShopId(),eToken,resp);
         }
     }
 

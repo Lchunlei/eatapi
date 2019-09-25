@@ -4,6 +4,7 @@ import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.model.resp.CtmBill;
+import com.chunlei.eat.model.resp.UserRate;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public interface BillService {
 
     public void makeBill(MakeOrder makeOrder, ApiResp resp);
 
-    public void rate(Integer userId, ApiResp<Integer> resp);
+    public void rate(Integer userId, ApiResp<UserRate> resp);
 
     public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
 

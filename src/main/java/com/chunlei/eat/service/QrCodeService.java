@@ -12,6 +12,8 @@ public interface QrCodeService {
 
     public void binding(String eToken,Integer deskCode,Integer qrId,ApiResp resp);
 
+    public void delBinding(String eToken,Integer qrId,ApiResp resp);
+
     public void findMyQrs(String eToken, ApiResp<List<QrCode>> resp);
 
     public void qrContent(Integer qrId, ApiResp<QrCode> resp);
