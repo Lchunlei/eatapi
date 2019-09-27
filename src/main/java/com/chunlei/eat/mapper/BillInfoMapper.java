@@ -29,12 +29,12 @@ public interface BillInfoMapper {
     //查看用户点菜顺序列表
     @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='1'")
     List<Integer> findUserIdBills(@Param("shopId")Integer shopId,@Param("billStatus")Integer billStatus);
-    @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus=#{billStatus}")
-    List<BillInfo> findUserBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId,@Param("billStatus")Integer billStatus);
+    @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus IN('0','1')")
+    List<BillInfo> findNoPayUserBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
     //查看所有菜单
-    @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId}")
-    List<BillInfo> findAllBills(@Param("shopId")Integer shopId);
+    @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId} ORDER BY billId DESC LIMIT ${startNum},10")
+    List<BillInfo> findAllBills(@Param("shopId")Integer shopId,@Param("startNum")Integer startNum);
 
     @Select("SELECT * FROM bill_today_info WHERE userId=#{userId} AND billStatus=#{billStatus}")
     List<BillInfo> findMyBills(@Param("userId")Integer userId,@Param("billStatus")Integer billStatus);
@@ -49,10 +49,15 @@ public interface BillInfoMapper {
     @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY cTime")
     List<Integer> findUsersEating(@Param("shopId")Integer shopId,@Param("billStatus")Integer billStatus);
 
+    //查看当前店铺未支付的客人ID
+    @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus IN('0','1') ORDER BY cTime")
+    List<Integer> findUsersNoPay(@Param("shopId")Integer shopId);
+
     @Delete("DELETE FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='0' AND userId=#{userId}")
     int delUserBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
-    @Update("UPDATE bill_today_info SET billStatus='1' WHERE shopId=#{shopId} AND billStatus='0' AND userId=#{userId}")
+    //本店某顾客付款结账
+    @Update("UPDATE bill_today_info SET billStatus='2' WHERE shopId=#{shopId} AND billStatus='1' AND userId=#{userId}")
     int completeBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
 

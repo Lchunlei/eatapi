@@ -23,6 +23,16 @@ public class UserRate {
         this.bills = bills;
     }
 
+    @Override
+    public String toString() {
+        return "UserRate{" +
+                "shopName='" + shopName + '\'' +
+                ", rate=" + rate +
+                ", totalMoney=" + totalMoney +
+                ", bills=" + bills +
+                '}';
+    }
+
     public String getShopName() {
         return shopName;
     }

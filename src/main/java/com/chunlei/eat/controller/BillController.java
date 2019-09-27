@@ -69,10 +69,10 @@ public class BillController {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="查看本店订单列表", notes="查看本店订单列表")
-    public ApiResp<List<BillInfo>> list(@RequestParam(required = false) Integer tabNum, @RequestParam String eToken){
+    public ApiResp<List<BillInfo>> list(@RequestParam(required = false) Integer tabNum, @RequestParam Integer pageNum, @RequestParam String eToken){
         ApiResp resp = new ApiResp();
-        log.info("\n-----查看本店订单列表---->"+tabNum+"-->"+eToken);
-        billService.getBills(tabNum,eToken,resp);
+        log.info("\n-----查看本店订单列表---->"+tabNum+"--->"+pageNum+"-->"+eToken);
+        billService.getBills(tabNum,pageNum,eToken,resp);
         log.info("\n-----查看本店订单列表resp---->"+resp);
         return resp;
     }

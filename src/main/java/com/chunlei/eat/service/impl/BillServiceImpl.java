@@ -58,7 +58,7 @@ public class BillServiceImpl implements BillService {
                     FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
                     if(shopInfo.getShopId().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
                         //菜单校验完毕，入库
-                        BillInfo billInfo = new BillInfo(uid,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                        BillInfo billInfo = new BillInfo(0,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
                         billInfoMapper.insertOne(billInfo);
                     }else {
                         resp.respErr(MsgConstant.OPE_ERR);
@@ -105,7 +105,7 @@ public class BillServiceImpl implements BillService {
     }
 
     @Override
-    public void getBills(Integer tabNum,String eToken, ApiResp<List<BillInfo>> resp) {
+    public void getBills(Integer tabNum,Integer pageNum,String eToken, ApiResp<List<BillInfo>> resp) {
         Integer shopId = TokenUtil.getSidByToken(eToken);
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
@@ -114,9 +114,12 @@ public class BillServiceImpl implements BillService {
             if(tabNum.equals(1)){
                 //待出餐
                 billInfos = billInfoMapper.findOutBills(shopId,0);
+            }else if(tabNum.equals(2)){
+                //本月全部
+                billInfos = billInfoMapper.findAllBills(shopId,(pageNum-1)*10);
             }else {
-                //全部
-                billInfos = billInfoMapper.findAllBills(shopId);
+                //本月全部
+                billInfos = billInfoMapper.findAllBills(shopId,(pageNum-1)*10);
             }
             if(billInfos.isEmpty()){
                 resp.respErr(MsgConstant.DATA_NULL);
@@ -133,14 +136,14 @@ public class BillServiceImpl implements BillService {
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
             //待处理客单
-            List<Integer> eatingUsers = billInfoMapper.findUsersEating(shopId,billStatus);
-            if(eatingUsers.isEmpty()){
+            List<Integer> noPayUsers = billInfoMapper.findUsersNoPay(shopId);
+            if(noPayUsers.isEmpty()){
                 resp.respErr(MsgConstant.DATA_NULL);
             }else {
                 List<CtmBill> ctmBills = new ArrayList();
-                for(Integer uid:eatingUsers){
+                for(Integer uid:noPayUsers){
                     CtmBill cb = new CtmBill();
-                    List<BillInfo> bs = billInfoMapper.findUserBills(shopId,uid,billStatus);
+                    List<BillInfo> bs = billInfoMapper.findNoPayUserBills(shopId,uid);
                     Date makeTime=new Date();
                     Integer deskCode=0;
                     Integer userId=0;
@@ -214,13 +217,9 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            if(userId==0){
-                resp.respErr("代客下单不可一键完成！");
-            }else {
-                int i = billInfoMapper.completeBills(shopId,userId);
-                if(i==0){
-                    resp.respErr(MsgConstant.OPE_ERR);
-                }
+            int i = billInfoMapper.completeBills(shopId,userId);
+            if(i==0){
+                resp.respErr(MsgConstant.OPE_ERR);
             }
         }
     }

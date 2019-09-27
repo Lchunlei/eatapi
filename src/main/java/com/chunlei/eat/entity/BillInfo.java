@@ -32,6 +32,23 @@ public class BillInfo {
         this.totalPrice = totalPrice;
     }
 
+    @Override
+    public String toString() {
+        return "BillInfo{" +
+                "billId=" + billId +
+                ", userId=" + userId +
+                ", shopId=" + shopId +
+                ", deskCode=" + deskCode +
+                ", foodId=" + foodId +
+                ", foodName='" + foodName + '\'' +
+                ", eatNum=" + eatNum +
+                ", totalPrice=" + totalPrice +
+                ", billStatus=" + billStatus +
+                ", cTime=" + cTime +
+                ", eToken='" + eToken + '\'' +
+                '}';
+    }
+
     public Integer getDeskCode() {
         return deskCode;
     }
