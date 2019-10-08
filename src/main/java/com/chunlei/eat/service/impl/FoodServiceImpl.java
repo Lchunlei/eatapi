@@ -134,6 +134,10 @@ public class FoodServiceImpl implements FoodService {
         if(shopId ==0 ){
             //代客下单
             shopId = TokenUtil.getSidByToken(eToken);
+            if(shopId==null){
+                resp.respErr(MsgConstant.NO_SCAN);
+                return;
+            }
         }
         ShopInfo shopInfo = shopMapper.findShopById(shopId);
         List<MenuCate> menuCates = new ArrayList();

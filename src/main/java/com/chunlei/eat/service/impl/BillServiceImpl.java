@@ -5,10 +5,7 @@ import com.chunlei.eat.entity.BillInfo;
 import com.chunlei.eat.entity.FoodInfo;
 import com.chunlei.eat.entity.QrCode;
 import com.chunlei.eat.entity.ShopInfo;
-import com.chunlei.eat.mapper.BillInfoMapper;
-import com.chunlei.eat.mapper.FoodMapper;
-import com.chunlei.eat.mapper.QrCodeMapper;
-import com.chunlei.eat.mapper.ShopMapper;
+import com.chunlei.eat.mapper.*;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.model.resp.CtmBill;
@@ -36,6 +33,8 @@ public class BillServiceImpl implements BillService {
     private QrCodeMapper qrCodeMapper;
     @Autowired
     private ShopMapper shopMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 通过菜谱下单
@@ -68,6 +67,9 @@ public class BillServiceImpl implements BillService {
             }
         }else {
             //扫了桌码下单
+            if(uid==null){
+                uid = userMapper.findMyInfo(TokenUtil.getSopenIdByToken(makeOrder.geteToken())).getUserId();
+            }
             QrCode qrCode = qrCodeMapper.findQrById(makeOrder.getShopId());
             for(FoodInfo b:makeOrder.getBillInfos()){
                 FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
@@ -88,11 +90,11 @@ public class BillServiceImpl implements BillService {
 
         List<BillInfo> billInfos = billInfoMapper.findMyWillEatBills(userId);
         if(billInfos.isEmpty()){
-            resp.respErr(MsgConstant.DATA_NULL);
+            resp.respErr(MsgConstant.NO_BILL);
         }else {
             ShopInfo shopInfo = shopMapper.findShopById(billInfos.get(0).getShopId());
 
-            Integer rate = billInfoMapper.findRate(billInfos.get(0).getShopId(),billInfos.get(0).getBillId());
+            Integer rate = billInfoMapper.findRate(billInfos.get(0).getShopId(),userId);
             int total = 0;
             for(BillInfo b:billInfos){
                 if(b.getShopId().equals(shopInfo.getShopId())){

@@ -19,8 +19,8 @@ public interface BillInfoMapper {
     int delById(Integer billId);
 
     //查看当前点餐排名
-    @Select("SELECT COUNT(billId) FROM bill_today_info WHERE shopId=#{shopId} AND billId<#{billId} AND billStatus='1'")
-    int findRate(@Param("shopId")Integer shopId,@Param("billId")Integer billId);
+    @Select("SELECT COUNT(DISTINCT(userId)) AS rate FROM bill_today_info WHERE billId<(SELECT billId FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus IN('0','1') ORDER BY billId DESC LIMIT 1)AND billStatus ='0'")
+    int findRate(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
     //查看出菜顺序列表
     @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY billId")
