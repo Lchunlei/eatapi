@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Created by lcl on 2019/9/6 0006
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
+    @Transactional(isolation= Isolation.READ_UNCOMMITTED)
     public void loginApp(String wxOpenId, ApiResp<String> apiResp) {
         UserInfo userInfo = userMapper.findMyInfo(wxOpenId);
         if(userInfo==null){
@@ -31,6 +34,7 @@ public class UserServiceImpl implements UserService {
             if(i==1){
                 userInfo = userMapper.findMyInfo(wxOpenId);
                 String tolen = TokenUtil.getUtoken(userInfo.getUserId(),wxOpenId);
+                apiResp.setRespMsg(userInfo.getUserId().toString());
                 apiResp.setRespData(tolen);
             }else {
                 apiResp.respErr(MsgConstant.SYS_ERR);

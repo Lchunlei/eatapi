@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * @Created by lcl on 2019/8/22 0022
  */
@@ -32,7 +35,14 @@ public class ShopServiceImpl implements ShopService {
 
     //用户主动登录
     @Override
+    @Transactional
     public void userLogin(ShopInfo shopInfo, ApiResp apiResp) {
+        Pattern emoji = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+        Matcher emojiMatcher = emoji.matcher(shopInfo.getNickName());
+        if (emojiMatcher.find()) {
+            String replace = emojiMatcher.replaceAll("*");
+            shopInfo.setNickName(replace);
+        }
         //拼接当前信息保存到店铺表
         String openid = TokenUtil.getUopenIdByToken(shopInfo.getWxOpenId());
         shopInfo.setWxOpenId(openid);
@@ -40,13 +50,47 @@ public class ShopServiceImpl implements ShopService {
         int i;
         String eToken;
         if(shop==null){
-            i = shopMapper.insertOne(shopInfo);
+            try {
+                i = shopMapper.insertOne(shopInfo);
+            }catch (Exception e){
+                String regEx="[a-zA-Z0-9\\u4e00-\\u9fa5]";
+                Pattern p  = Pattern.compile(regEx);
+                Matcher m = p.matcher(shopInfo.getNickName());
+                StringBuffer sb = new StringBuffer();
+                while(m.find()){
+                    sb.append(m.group());
+                }
+                shopInfo.setNickName(sb.toString());
+                try {
+                    i = shopMapper.insertOne(shopInfo);
+                }catch (Exception ex){
+                    shopInfo.setNickName("****");
+                    i = shopMapper.insertOne(shopInfo);
+                }
+            }
             eToken = TokenUtil.getStoken(shopMapper.selectMaxSeq(),openid);
         }else {
             shopInfo.setBossName(null);
             shopInfo.setBossTel(null);
             shopInfo.setExpireTime(null);
-            i = shopMapper.updateBathInfo(shopInfo);
+            try {
+                i = shopMapper.updateBathInfo(shopInfo);
+            }catch (Exception e){
+                String regEx="[a-zA-Z0-9\\u4e00-\\u9fa5]";
+                Pattern p  = Pattern.compile(regEx);
+                Matcher m = p.matcher(shopInfo.getNickName());
+                StringBuffer sb = new StringBuffer();
+                while(m.find()){
+                    sb.append(m.group());
+                }
+                shopInfo.setNickName(sb.toString());
+                try {
+                    i = shopMapper.updateBathInfo(shopInfo);
+                }catch (Exception ex){
+                    shopInfo.setNickName("****");
+                    i = shopMapper.updateBathInfo(shopInfo);
+                }
+            }
             eToken = TokenUtil.getStoken(shop.getShopId(),openid);
         }
         if(i==1){
@@ -67,7 +111,12 @@ public class ShopServiceImpl implements ShopService {
             ShopInfo shop = shopMapper.findShopById(sId);
             shopInfo.setShopId(shop.getShopId());
             shopInfo.setExpireTime(null);
-            shopMapper.updateBathInfo(shopInfo);
+            try {
+                shopMapper.updateBathInfo(shopInfo);
+            }catch (Exception e){
+                apiResp.respErr("不支持特殊字符");
+            }
+
         }
     }
 
