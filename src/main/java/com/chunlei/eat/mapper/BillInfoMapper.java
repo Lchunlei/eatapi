@@ -60,5 +60,16 @@ public interface BillInfoMapper {
     @Update("UPDATE bill_today_info SET billStatus='2' WHERE shopId=#{shopId} AND billStatus='1' AND userId=#{userId}")
     int completeBills(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
+    //查看本店收益
+    @Select("SELECT SUM(totalPrice) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='2' AND cTime>#{sTime} AND cTime<#{eTime}")
+    Integer findIncome(@Param("shopId")Integer shopId,@Param("sTime")String sTime,@Param("eTime")String eTime);
+
+    //查看本店单量
+    @Select("SELECT COUNT(billId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='2' AND cTime>#{sTime} AND cTime<#{eTime}")
+    Integer findBillNum(@Param("shopId")Integer shopId,@Param("sTime")String sTime,@Param("eTime")String eTime);
+
+    //查看本店客流量
+    @Select("SELECT COUNT(DISTINCT(userId)) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus='2' AND cTime>#{sTime} AND cTime<#{eTime}")
+    Integer findClientNum(@Param("shopId")Integer shopId,@Param("sTime")String sTime,@Param("eTime")String eTime);
 
 }

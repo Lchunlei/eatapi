@@ -1,6 +1,7 @@
 package com.chunlei.eat.sql;
 
 import com.chunlei.eat.entity.ShopInfo;
+import com.chunlei.eat.utils.StringTool;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -43,6 +44,12 @@ public class ShopSql {
             }
             if(shopInfo.getExpireTime()!=null){
                 SET("expireTime=#{expireTime}");
+            }
+            if(!StringTool.isBlank(shopInfo.getWifiName())){
+                SET("wifiName=#{wifiName}");
+            }
+            if(!StringTool.isBlank(shopInfo.getWifiPwd())){
+                SET("wifiPwd=#{wifiPwd}");
             }
             SET("loginTime=NOW()");
             if(shopInfo.getShopId()!=null){

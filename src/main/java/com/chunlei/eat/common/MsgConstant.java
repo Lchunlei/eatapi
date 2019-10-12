@@ -13,6 +13,8 @@ public class MsgConstant {
 
     public static final String DATA_NULL = "所查数据为空！";
 
+    public static final String GET_DATA_NULL = "未查询到相关信息！";
+
     public static final String NO_BILL = "您还没有点餐呢";
 
     public static final String OPE_ERR = "操作无效";

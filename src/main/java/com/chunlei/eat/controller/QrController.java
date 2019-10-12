@@ -1,9 +1,11 @@
 package com.chunlei.eat.controller;
 
 import com.chunlei.eat.entity.QrGet;
+import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.QrCodeService;
 import com.chunlei.eat.service.QrGetService;
+import com.chunlei.eat.utils.StringTool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -85,5 +87,18 @@ public class QrController {
         return resp;
     }
 
+    @RequestMapping(value = "/wifi",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="根据桌码查看本店WIFI", notes="根据桌码查看本店WIFI")
+    public ApiResp getWifi(@RequestParam Integer qrId){
+        ApiResp<ShopInfo> resp = new ApiResp();
+        log.info("\n-----根据桌码查看本店WIFI---->"+qrId);
+        qrCodeService.getShopInfo(qrId,resp);
+        if(StringTool.isBlank(resp.getRespData().getWifiPwd())){
+            resp.respErr("本店未提供免费WIFI哦");
+            resp.setRespData(null);
+        }
+        log.info("\n-----根据桌码查看本店WIFI_resp---->"+resp);
+        return resp;
+    }
 
 }

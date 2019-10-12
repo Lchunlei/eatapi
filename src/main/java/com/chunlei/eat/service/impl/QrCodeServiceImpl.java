@@ -2,7 +2,9 @@ package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
 import com.chunlei.eat.entity.QrCode;
+import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.mapper.QrCodeMapper;
+import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.QrCodeService;
 import com.chunlei.eat.utils.Reqclient;
@@ -21,6 +23,8 @@ import java.util.List;
 public class QrCodeServiceImpl implements QrCodeService {
     @Autowired
     private QrCodeMapper qrCodeMapper;
+    @Autowired
+    private ShopMapper shopMapper;
 
     @Override
     public void binding(String eToken, Integer deskCode,Integer qrId, ApiResp resp) {
@@ -36,7 +40,9 @@ public class QrCodeServiceImpl implements QrCodeService {
                 QrCode nQr = qrCodeMapper.findQrById(qrId);
                 if(nQr.getShopId()==null){
                     int i = qrCodeMapper.binding(qrId,sId,deskCode);
-                    if(i!=1){
+                    if(i==1){
+                        resp.setRespMsg("绑码成功！贴到桌角侯客吧");
+                    }else {
                         resp.respErr(MsgConstant.OPE_ERR);
                     }
                 }else {
@@ -123,6 +129,17 @@ public class QrCodeServiceImpl implements QrCodeService {
             }
         }
 
+    }
+
+    @Override
+    public void getShopInfo(Integer qrId, ApiResp<ShopInfo> resp) {
+        QrCode qrCode = qrCodeMapper.findQrById(qrId);
+        if(qrCode==null||qrCode.getShopId()==null){
+            resp.respErr(MsgConstant.GET_DATA_NULL);
+        }else {
+            ShopInfo shopInfo = shopMapper.findShopById(qrCode.getShopId());
+            resp.setRespData(shopInfo);
+        }
     }
 
 

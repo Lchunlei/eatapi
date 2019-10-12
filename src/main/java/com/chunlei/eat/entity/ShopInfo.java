@@ -20,6 +20,8 @@ public class ShopInfo {
     private String city;
     private String district;
     private String address;
+    private String wifiName;
+    private String wifiPwd;
     private Date loginTime;
     private Date expireTime;
     private Date cTime;
@@ -48,6 +50,22 @@ public class ShopInfo {
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public String getWifiName() {
+        return wifiName;
+    }
+
+    public void setWifiName(String wifiName) {
+        this.wifiName = wifiName;
+    }
+
+    public String getWifiPwd() {
+        return wifiPwd;
+    }
+
+    public void setWifiPwd(String wifiPwd) {
+        this.wifiPwd = wifiPwd;
     }
 
     public Integer getStaffTotal() {
