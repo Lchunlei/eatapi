@@ -30,7 +30,7 @@ public class ShopController {
     @RequestMapping(value = "/userLogin",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="用户主动登录", notes="用户主动登录")
     public ApiResp userLogin(@RequestBody ShopInfo shopInfo){
-        ApiResp<String> resp = new ApiResp();
+        ApiResp<ShopInfo> resp = new ApiResp();
         log.info("\n-----用户主动登录---->"+shopInfo);
         shopService.userLogin(shopInfo,resp);
         return resp;

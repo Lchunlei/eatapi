@@ -15,8 +15,8 @@ public interface BillInfoMapper {
     @Insert("INSERT INTO bill_today_info(`userId`, `shopId`,`deskCode`, `foodId`, `foodName`, `eatNum`, `totalPrice`, `cTime`) VALUES (#{userId},#{shopId},#{deskCode},#{foodId},#{foodName},#{eatNum},#{totalPrice},NOW())")
     int insertOne(BillInfo billInfo);
 
-    @Delete("DELETE FROM bill_today_info WHERE billId=#{billId} AND billStatus='0'")
-    int delById(Integer billId);
+    @Delete("DELETE FROM bill_today_info WHERE billId=#{billId} AND shopId=#{shopId} AND billStatus='0'")
+    int delById(@Param("billId")Integer billId,@Param("shopId")Integer shopId);
 
     //查看当前点餐排名
     @Select("SELECT COUNT(DISTINCT(userId)) AS rate FROM bill_today_info WHERE billId<(SELECT billId FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus IN('0','1') ORDER BY billId DESC LIMIT 1)AND billStatus ='0'")
@@ -42,8 +42,8 @@ public interface BillInfoMapper {
     @Select("SELECT * FROM bill_today_info WHERE userId=#{userId} AND billStatus IN('0','1') ORDER BY billId DESC")
     List<BillInfo> findMyWillEatBills(@Param("userId")Integer userId);
 
-    @Update("UPDATE bill_today_info SET billStatus=#{billStatus} WHERE billId=#{billId}")
-    int updateStatus(@Param("billId")Integer billId,@Param("billStatus")Integer billStatus);
+    @Update("UPDATE bill_today_info SET billStatus=#{billStatus} WHERE billId=#{billId} AND shopId=#{shopId}")
+    int updateStatus(@Param("billId")Integer billId,@Param("billStatus")Integer billStatus,@Param("shopId")Integer shopId);
 
     //查看当前店铺未完成订单的客人ID
     @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY cTime")

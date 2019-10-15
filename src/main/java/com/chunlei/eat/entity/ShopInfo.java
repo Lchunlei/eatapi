@@ -22,6 +22,10 @@ public class ShopInfo {
     private String address;
     private String wifiName;
     private String wifiPwd;
+    private Integer userRole;//1店长2收银员3服务员
+    private Integer mySid;//隶属店铺ID
+    private Integer inviteSid;
+    private Integer preRole;
     private Date loginTime;
     private Date expireTime;
     private Date cTime;
@@ -50,6 +54,38 @@ public class ShopInfo {
                 ", expireTime=" + expireTime +
                 ", cTime=" + cTime +
                 '}';
+    }
+
+    public Integer getPreRole() {
+        return preRole;
+    }
+
+    public void setPreRole(Integer preRole) {
+        this.preRole = preRole;
+    }
+
+    public Integer getInviteSid() {
+        return inviteSid;
+    }
+
+    public void setInviteSid(Integer inviteSid) {
+        this.inviteSid = inviteSid;
+    }
+
+    public Integer getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(Integer userRole) {
+        this.userRole = userRole;
+    }
+
+    public Integer getMySid() {
+        return mySid;
+    }
+
+    public void setMySid(Integer mySid) {
+        this.mySid = mySid;
     }
 
     public String getWifiName() {

@@ -36,7 +36,7 @@ public class ShopServiceImpl implements ShopService {
     //用户主动登录
     @Override
     @Transactional
-    public void userLogin(ShopInfo shopInfo, ApiResp apiResp) {
+    public void userLogin(ShopInfo shopInfo, ApiResp<ShopInfo> apiResp) {
         Pattern emoji = Pattern.compile("[\ud83c\udc00-\ud83c\udfff]|[\ud83d\udc00-\ud83d\udfff]|[\u2600-\u27ff]",Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
         Matcher emojiMatcher = emoji.matcher(shopInfo.getNickName());
         if (emojiMatcher.find()) {
@@ -69,6 +69,9 @@ public class ShopServiceImpl implements ShopService {
                 }
             }
             eToken = TokenUtil.getStoken(shopMapper.selectMaxSeq(),openid);
+            shop.setMySid(null);
+            shop.setUserRole(1);
+            shop.setWxOpenId("");
         }else {
             shopInfo.setBossName(null);
             shopInfo.setBossTel(null);
@@ -92,10 +95,19 @@ public class ShopServiceImpl implements ShopService {
                 }
             }
             eToken = TokenUtil.getStoken(shop.getShopId(),openid);
+            if(shop.getUserRole().equals(1)){
+                shop.setWxOpenId("");
+            }else {
+                //员工登陆
+                ShopInfo myShop = shopMapper.findShopById(shop.getMySid());
+                String sToken = TokenUtil.getStoken(shop.getMySid(),myShop.getWxOpenId());
+                shop.setWxOpenId(sToken);
+            }
         }
         if(i==1){
             //刷新客户端token
-            apiResp.setRespData(eToken);
+            apiResp.setRespMsg(eToken);
+            apiResp.setRespData(shop);
         }else {
             apiResp.respErr(MsgConstant.SYS_ERR);
         }

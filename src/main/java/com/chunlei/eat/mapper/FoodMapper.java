@@ -20,8 +20,8 @@ public interface FoodMapper {
     @UpdateProvider(type= FoodSql.class, method="updateSql")
     int updateBath(FoodInfo foodInfo);
 
-    @Delete("DELETE FROM food_info WHERE foodId=#{foodId}")
-    int delById(@Param("foodId")Integer foodId);
+    @Delete("DELETE FROM food_info WHERE foodId=#{foodId} AND shopId=#{shopId}")
+    int delById(@Param("foodId")Integer foodId,@Param("shopId")Integer shopId);
 
     @Select("SELECT * FROM food_info WHERE shopId=#{shopId} AND foodStatus='1' ORDER BY paixu DESC")
     List<FoodInfo> findCanEatByShopId(@Param("shopId")Integer shopId);

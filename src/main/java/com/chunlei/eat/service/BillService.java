@@ -17,7 +17,7 @@ public interface BillService {
 
     public void rate(Integer userId, ApiResp<UserRate> resp);
 
-    public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
+//    public void deal(Integer billId,Integer billStatus,String eToken, ApiResp<Integer> resp);
 
     public void getBills(Integer tabNum,Integer pageNum,String eToken, ApiResp<List<BillInfo>> resp);
 

@@ -9,7 +9,7 @@ import com.chunlei.eat.model.ApiResp;
  */
 public interface ShopService {
 
-    public void userLogin(ShopInfo shopInfo, ApiResp apiResp);
+    public void userLogin(ShopInfo shopInfo, ApiResp<ShopInfo> apiResp);
 
     public void join(ShopInfo shopInfo, ApiResp apiResp);
 

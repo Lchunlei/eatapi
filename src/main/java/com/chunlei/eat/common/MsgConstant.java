@@ -21,6 +21,8 @@ public class MsgConstant {
 
     public static final String NOT_LOGIN = "请先点击头像登录！";
 
+    public static final String NOT_IS_SHOP = "您还没有入驻为商家呢！";
+
     public static final String NO_SCAN = "请登录或扫码点餐";
 
     public static final String FOOD_NULL = "老板略懒，未发菜品！";

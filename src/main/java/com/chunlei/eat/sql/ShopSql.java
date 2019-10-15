@@ -51,6 +51,12 @@ public class ShopSql {
             if(!StringTool.isBlank(shopInfo.getWifiPwd())){
                 SET("wifiPwd=#{wifiPwd}");
             }
+            if(shopInfo.getInviteSid()!=null){
+                SET("inviteSid=#{inviteSid}");
+            }
+            if(shopInfo.getPreRole()!=null){
+                SET("preRole=#{preRole}");
+            }
             SET("loginTime=NOW()");
             if(shopInfo.getShopId()!=null){
                 WHERE("shopId=#{shopId}");

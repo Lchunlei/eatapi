@@ -8,10 +8,11 @@ import java.util.Date;
 public class UserInfo {
     private Integer userId;
     private String wxOpenId;
-    private Integer billId;
-    private Integer shopId;
-    private Integer myShopId;
-    private Integer shopRole;//1服务员2厨师
+//    private Integer billId;
+//    private Integer shopId;
+//    private Integer myShopId;
+//    private Integer shopRole;//1服务员2厨师
+    private Integer useStatus;//0禁用1正常
     private Date uTime;
 
     @Override
@@ -19,26 +20,16 @@ public class UserInfo {
         return "UserInfo{" +
                 "userId=" + userId +
                 ", wxOpenId='" + wxOpenId + '\'' +
-                ", billId=" + billId +
-                ", shopId=" + shopId +
                 ", uTime=" + uTime +
                 '}';
     }
 
-    public Integer getMyShopId() {
-        return myShopId;
+    public Integer getUseStatus() {
+        return useStatus;
     }
 
-    public void setMyShopId(Integer myShopId) {
-        this.myShopId = myShopId;
-    }
-
-    public Integer getShopRole() {
-        return shopRole;
-    }
-
-    public void setShopRole(Integer shopRole) {
-        this.shopRole = shopRole;
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
     }
 
     public Integer getUserId() {
@@ -55,22 +46,6 @@ public class UserInfo {
 
     public void setWxOpenId(String wxOpenId) {
         this.wxOpenId = wxOpenId;
-    }
-
-    public Integer getBillId() {
-        return billId;
-    }
-
-    public void setBillId(Integer billId) {
-        this.billId = billId;
-    }
-
-    public Integer getShopId() {
-        return shopId;
-    }
-
-    public void setShopId(Integer shopId) {
-        this.shopId = shopId;
     }
 
     public Date getuTime() {

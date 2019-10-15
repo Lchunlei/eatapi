@@ -49,29 +49,34 @@ public class FoodServiceImpl implements FoodService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
             foodInfo.setShopId(shopId);
             foodMapper.insertOne(foodInfo);
         }
 
     }
 
-    @Override
-    public void addFoods(MuchFood muchFood, ApiResp resp) {
-        Integer shopId = TokenUtil.getSidByToken(muchFood.geteToken());
-        if(shopId==null){
-            resp.respErr(MsgConstant.NOT_LOGIN);
-        }else {
-            int i = 0;
-            for(FoodInfo f:muchFood.getFoods()){
-                f.setShopId(shopId);
-                int j = foodMapper.insertOne(f);
-                if(j==1){
-                    j++;
-                }
-            }
-            resp.setRespMsg("成功添加"+i+"份新品！");
-        }
-    }
+//    @Override
+//    public void addFoods(MuchFood muchFood, ApiResp resp) {
+//        Integer shopId = TokenUtil.getSidByToken(muchFood.geteToken());
+//        if(shopId==null){
+//            resp.respErr(MsgConstant.NOT_LOGIN);
+//        }else {
+//            int i = 0;
+//            for(FoodInfo f:muchFood.getFoods()){
+//                f.setShopId(shopId);
+//                int j = foodMapper.insertOne(f);
+//                if(j==1){
+//                    j++;
+//                }
+//            }
+//            resp.setRespMsg("成功添加"+i+"份新品！");
+//        }
+//    }
 
     @Override
     public void sellFood(Integer foodId, String eToken, ApiResp resp) {
@@ -79,6 +84,15 @@ public class FoodServiceImpl implements FoodService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+                if(shopId==null){
+                    resp.respErr(MsgConstant.OPE_ERR);
+                    return;
+                }
+            }
             FoodInfo foodInfo = foodMapper.findFoodById(foodId);
             int i = 0;
             if(foodInfo.getFoodStatus().equals(0)){
@@ -98,6 +112,11 @@ public class FoodServiceImpl implements FoodService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
             foodInfo.setShopId(shopId);
             int i = foodMapper.updateBath(foodInfo);
             if(i!=1){
@@ -122,7 +141,12 @@ public class FoodServiceImpl implements FoodService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            int i = foodMapper.delById(foodId);
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
+            int i = foodMapper.delById(foodId,shopId);
             if(i!=1){
                 resp.setRespMsg(MsgConstant.OPE_ERR);
             }

@@ -19,12 +19,6 @@ public interface UserMapper {
     @Insert("INSERT INTO user_info(`wxOpenId`,`uTime`) VALUES (#{wxOpenId}, NOW())")
     int insertOne(@Param("wxOpenId") String wxOpenId);
 
-    @Update("UPDATE user_info SET myShopId=#{myShopId},shopRole=#{shopRole} WHERE wxOpenId=#{wxOpenId}")
-    int addUserRole(@Param("myShopId")Integer myShopId,@Param("shopRole")Integer shopRole,@Param("wxOpenId")String wxOpenId);
-
-    @Update("UPDATE user_info SET myShopId=NULL,shopRole=NULL WHERE wxOpenId=#{wxOpenId}")
-    int delUserRole(@Param("wxOpenId")String wxOpenId);
-
     @Select("SELECT u.userId,u.wxOpenId,u.shopRole,s.nickName,s.headUrl FROM user_info u LEFT JOIN shop_info s ON u.wxOpenId=s.wxOpenId WHERE u.myShopId=#{shopId}")
     List<ShopStaff> findShopStaff(@Param("shopId")Integer shopId);
 

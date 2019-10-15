@@ -14,7 +14,7 @@ public interface FoodService {
 
     public void addFood(FoodInfo foodInfo, ApiResp resp);
 
-    public void addFoods(MuchFood muchFood, ApiResp resp);
+//    public void addFoods(MuchFood muchFood, ApiResp resp);
 
     public void sellFood(Integer foodId,String eToken, ApiResp resp);
 

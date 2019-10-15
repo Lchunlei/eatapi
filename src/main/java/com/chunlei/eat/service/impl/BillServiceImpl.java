@@ -53,15 +53,31 @@ public class BillServiceImpl implements BillService {
             }else {
                 //商家代客下单
                 ShopInfo shopInfo = shopMapper.findShopById(sid);
-                for(FoodInfo b:makeOrder.getBillInfos()){
-                    FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-                    if(shopInfo.getShopId().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
-                        //菜单校验完毕，入库
-                        BillInfo billInfo = new BillInfo(0,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
-                        billInfoMapper.insertOne(billInfo);
-                    }else {
-                        resp.respErr(MsgConstant.OPE_ERR);
-                        throw new RuntimeException("菜品信息不合规！！");
+                if(shopInfo.getUserRole().equals(1)){
+                    //店长
+                    for(FoodInfo b:makeOrder.getBillInfos()){
+                        FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                        if(shopInfo.getShopId().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                            //菜单校验完毕，入库
+                            BillInfo billInfo = new BillInfo(0,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                            billInfoMapper.insertOne(billInfo);
+                        }else {
+                            resp.respErr(MsgConstant.OPE_ERR);
+                            throw new RuntimeException("菜品信息不合规！！");
+                        }
+                    }
+                }else {
+                    //店员
+                    for(FoodInfo b:makeOrder.getBillInfos()){
+                        FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                        if(shopInfo.getMySid().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                            //菜单校验完毕，入库
+                            BillInfo billInfo = new BillInfo(0,shopInfo.getMySid(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
+                            billInfoMapper.insertOne(billInfo);
+                        }else {
+                            resp.respErr(MsgConstant.OPE_ERR);
+                            throw new RuntimeException("菜品信息不合规！！");
+                        }
                     }
                 }
             }
@@ -176,6 +192,11 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
             if(userId==0){
                 resp.respErr("代客下单不可删除！");
             }else {
@@ -193,7 +214,12 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            int i = billInfoMapper.delById(billId);
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
+            int i = billInfoMapper.delById(billId,shopId);
             if(i==0){
                 resp.respErr(MsgConstant.OPE_ERR);
             }
@@ -206,7 +232,12 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            int i = billInfoMapper.updateStatus(billId,1);
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
+            int i = billInfoMapper.updateStatus(billId,1,shopId);
             if(i==0){
                 resp.respErr(MsgConstant.OPE_ERR);
             }
@@ -219,6 +250,11 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                //员工
+                shopId = shopInfo.getMySid();
+            }
             int i = billInfoMapper.completeBills(shopId,userId);
             if(i==0){
                 resp.respErr(MsgConstant.OPE_ERR);
@@ -226,14 +262,14 @@ public class BillServiceImpl implements BillService {
         }
     }
 
-    @Override
-    public void deal(Integer billId,Integer billStatus,String eToken, ApiResp resp) {
-        TokenUtil.getSopenIdByToken(eToken);
-        int i = billInfoMapper.updateStatus(billId,billStatus);
-        if(i!=1){
-            resp.respErr(MsgConstant.OPE_ERR);
-        }
-    }
+//    @Override
+//    public void deal(Integer billId,Integer billStatus,String eToken, ApiResp resp) {
+//        TokenUtil.getSopenIdByToken(eToken);
+//        int i = billInfoMapper.updateStatus(billId,billStatus);
+//        if(i!=1){
+//            resp.respErr(MsgConstant.OPE_ERR);
+//        }
+//    }
 
 
 }
