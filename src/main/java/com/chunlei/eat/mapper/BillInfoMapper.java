@@ -18,9 +18,16 @@ public interface BillInfoMapper {
     @Delete("DELETE FROM bill_today_info WHERE billId=#{billId} AND shopId=#{shopId} AND billStatus='0'")
     int delById(@Param("billId")Integer billId,@Param("shopId")Integer shopId);
 
+    @Delete("DELETE FROM bill_today_info WHERE shopId!=#{shopId} AND billStatus!='2'")
+    int delOtherShopBills(@Param("shopId")Integer shopId);
+
     //查看当前点餐排名
-    @Select("SELECT COUNT(DISTINCT(userId)) AS rate FROM bill_today_info WHERE billId<(SELECT billId FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus IN('0','1') ORDER BY billId DESC LIMIT 1)AND billStatus ='0'")
-    int findRate(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
+    @Select("SELECT COUNT(DISTINCT(userId)) AS rate FROM bill_today_info WHERE shopId=#{shopId} AND billId<#{billId} AND billStatus ='0'")
+    Integer findRateByBillid(@Param("shopId")Integer shopId,@Param("billId")Integer billId);
+
+    //查看没有上的菜ID
+    @Select("SELECT billId FROM bill_today_info WHERE shopId=#{shopId} AND userId=#{userId} AND billStatus='0' ORDER BY billId DESC LIMIT 1")
+    Integer notOut(@Param("shopId")Integer shopId,@Param("userId")Integer userId);
 
     //查看出菜顺序列表
     @Select("SELECT * FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY billId")

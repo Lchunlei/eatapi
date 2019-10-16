@@ -44,7 +44,7 @@ public class BillServiceImpl implements BillService {
     public void makeBill(MakeOrder makeOrder, ApiResp resp) {
         Integer uid = TokenUtil.getUidByToken(makeOrder.geteToken());
         Integer sid = TokenUtil.getSidByToken(makeOrder.geteToken());
-
+        //其中shopId就是传来的桌码ID
         if(makeOrder.getShopId()==null||makeOrder.getShopId().equals(0)){
             //没有扫桌码直接下单、只允许商家自己下单，顾客必须扫码下单
             if(sid==null){
@@ -87,6 +87,8 @@ public class BillServiceImpl implements BillService {
                 uid = userMapper.findMyInfo(TokenUtil.getSopenIdByToken(makeOrder.geteToken())).getUserId();
             }
             QrCode qrCode = qrCodeMapper.findQrById(makeOrder.getShopId());
+            //先删除此人在其他店铺未完成的订单
+            billInfoMapper.delOtherShopBills(qrCode.getShopId());
             for(FoodInfo b:makeOrder.getBillInfos()){
                 FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
                 if(foodInfo.getShopId().equals(qrCode.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
@@ -109,8 +111,14 @@ public class BillServiceImpl implements BillService {
             resp.respErr(MsgConstant.NO_BILL);
         }else {
             ShopInfo shopInfo = shopMapper.findShopById(billInfos.get(0).getShopId());
+            Integer billId = billInfoMapper.notOut(billInfos.get(0).getShopId(),userId);
+            Integer rate;
+            if(billId==null){
+                rate =1;
+            }else {
+                rate = billInfoMapper.findRateByBillid(billInfos.get(0).getShopId(),billId)+1;
+            }
 
-            Integer rate = billInfoMapper.findRate(billInfos.get(0).getShopId(),userId);
             int total = 0;
             for(BillInfo b:billInfos){
                 if(b.getShopId().equals(shopInfo.getShopId())){
