@@ -12,4 +12,6 @@ public interface BannerService {
 
     public void findAll(String banType, ApiResp<List<BannerInfo>> resp);
 
+    public void findDetail(Integer bannerId,ApiResp<BannerInfo> resp);
+
 }

@@ -31,5 +31,14 @@ public class BannerController {
         return resp;
     }
 
+    @RequestMapping(value = "/one",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="查看轮播图详情", notes="查看轮播图详情")
+    public ApiResp findDetail(@RequestParam Integer bannerId){
+        ApiResp resp = new ApiResp();
+        log.info("\n-----查看轮播图详情---->"+bannerId);
+        bannerService.findDetail(bannerId,resp);
+        log.info("\n-----查看轮播图详情resp---->"+resp);
+        return resp;
+    }
 
 }

@@ -69,6 +69,7 @@ public class ShopServiceImpl implements ShopService {
                 }
             }
             eToken = TokenUtil.getStoken(shopMapper.selectMaxSeq(),openid);
+            shop=shopInfo;
             shop.setMySid(null);
             shop.setUserRole(1);
             shop.setWxOpenId("");

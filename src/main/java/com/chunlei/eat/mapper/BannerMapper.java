@@ -16,4 +16,7 @@ public interface BannerMapper {
     @Select("SELECT * FROM banner_info WHERE banType=#{banType} AND banStatus=1 ORDER BY paixu")
     List<BannerInfo> findAll(@Param("banType")String banType);
 
+    @Select("SELECT * FROM banner_info WHERE bannerId=#{bannerId}")
+    BannerInfo findById(@Param("bannerId")Integer bannerId);
+
 }

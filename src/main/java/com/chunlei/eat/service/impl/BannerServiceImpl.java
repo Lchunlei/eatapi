@@ -23,4 +23,10 @@ public class BannerServiceImpl implements BannerService {
         resp.setRespData(banners);
     }
 
+    @Override
+    public void findDetail(Integer bannerId, ApiResp<BannerInfo> resp) {
+        BannerInfo info = bannerMapper.findById(bannerId);
+        resp.setRespData(info);
+    }
+
 }
