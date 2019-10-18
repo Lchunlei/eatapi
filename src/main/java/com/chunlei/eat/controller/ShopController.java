@@ -91,6 +91,7 @@ public class ShopController {
         ApiResp<ShopInfo> resp = new ApiResp();
         log.info("\n-----商家信息查看---->"+eToken);
         shopService.getInfo(eToken,resp);
+        log.info("\n-----商家信息查看resp---->"+resp);
         return resp;
     }
 
