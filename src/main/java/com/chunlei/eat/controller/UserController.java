@@ -56,6 +56,7 @@ public class UserController {
                 }
             }
         }
+        log.info("\n-----微信快捷登录resp---->"+resp);
         return resp;
     }
 

@@ -3,6 +3,10 @@ package com.chunlei.eat.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chunlei.eat.common.WxConfig;
+import com.chunlei.eat.model.msg.AddBill;
+import com.chunlei.eat.model.msg.KeyWord;
+import com.chunlei.eat.model.msg.TakeFood;
+import com.chunlei.eat.model.msg.WeAppMsg;
 import com.chunlei.eat.model.resp.QrMsg;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -24,16 +28,13 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @Created by lcl on 2019/8/26 0026
  */
 public class Reqclient {
-
+    private static String access_token="26_SjPQem-IUN0SzBdDh3_lbTLU1bM1SRNQZQn96o1KXsRoB0FeEBjMIMVKZsiS-pgQqMRl7iFbGOXotLsDCgFONUM5jt_5IZ4RrEiLw8513mSFkJLekhgSqXcpQGgXwg_NXhEm_6xERuA6V61wJTCiAJAUEN";
     public static String getWxOpenId(String code){
         String reqUrl = WxConfig.WX_OPENID_URL.replace("CODE",code);
         return getReq(reqUrl);
@@ -42,7 +43,23 @@ public class Reqclient {
     public static String getWxAuth(){
         String reqUrl = WxConfig.WX_ACCESS_TOKEN_URL;
         String resu = getReq(reqUrl);
-        return JSONObject.parseObject(resu).getString("access_token");
+        String newtoken = JSONObject.parseObject(resu).getString("access_token");
+        System.out.println(newtoken);
+        return newtoken;
+    }
+
+    public static String sendMsg(String touser){
+        Map<String,Object> param = new HashMap();
+        String reqUrl = WxConfig.WX_PUSH_URL.replace("ACCESS_TOKEN",access_token);
+        param.put("touser",touser);
+        AddBill addBill = new AddBill(new KeyWord("2019-10-19 16:09:25"),new KeyWord("24"),new KeyWord("16"),new KeyWord("红烧肉盖浇饭（1）份"));
+        WeAppMsg weAppMsg = new WeAppMsg("voi_hZG3sOOWIcdqYPxu9EKcmKSL4KXIGEawQr_CxmE","730dab3cfe8d48ebbbbff85ca8fd7b19",addBill);
+        param.put("weapp_template_msg",weAppMsg);
+        param.put("page","pages/index/index");
+        String reqJson = JSON.toJSONString(param);
+        System.out.println(reqJson);
+        String restlt = postJson(reqUrl,reqJson);
+        return restlt;
     }
 
     /**
@@ -118,7 +135,7 @@ public class Reqclient {
     /**
      * 发送Map的post请求
      * */
-    public String postMap(String url,Map<String,String> map) {
+    public static String postMap(String url,Map<String,String> map) {
         String result = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost post = new HttpPost(url);
@@ -158,7 +175,7 @@ public class Reqclient {
     /**
      * Post发送joson
      * */
-    public String postJson(String url,String jsonString) {
+    public static String postJson(String url,String jsonString) {
         String result = null;
         CloseableHttpClient httpClient = HttpClients.createDefault();
         HttpPost post = new HttpPost(url);
