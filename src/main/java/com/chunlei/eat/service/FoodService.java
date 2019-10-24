@@ -12,13 +12,13 @@ import java.util.List;
  */
 public interface FoodService {
 
-    public void addFood(FoodInfo foodInfo, ApiResp resp);
+//    public void addFood(FoodInfo foodInfo, ApiResp resp);
 
 //    public void addFoods(MuchFood muchFood, ApiResp resp);
 
     public void sellFood(Integer foodId,String eToken, ApiResp resp);
 
-    public void updateFood(FoodInfo foodInfo, ApiResp resp);
+    public void addorup(FoodInfo foodInfo, ApiResp resp);
 
     public void findFoodInfo(Integer foodId, ApiResp<FoodInfo> resp);
 

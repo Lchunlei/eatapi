@@ -34,7 +34,7 @@ import java.util.*;
  * @Created by lcl on 2019/8/26 0026
  */
 public class Reqclient {
-    private static String access_token="26_SjPQem-IUN0SzBdDh3_lbTLU1bM1SRNQZQn96o1KXsRoB0FeEBjMIMVKZsiS-pgQqMRl7iFbGOXotLsDCgFONUM5jt_5IZ4RrEiLw8513mSFkJLekhgSqXcpQGgXwg_NXhEm_6xERuA6V61wJTCiAJAUEN";
+    private static String access_token="26_kaNvrFDXlbzdCGdkDeiHdbfJu_2QOopmMFs4gwQbLlLarDC1iSWj2FD2_Nnvc-wUw6vYEvxffxaB4rj97MvVcTz2_szV2ezoUKve6d9InQZOWoElgw26-ueSOrAWLXaAEANCO";
     public static String getWxOpenId(String code){
         String reqUrl = WxConfig.WX_OPENID_URL.replace("CODE",code);
         return getReq(reqUrl);
@@ -48,15 +48,29 @@ public class Reqclient {
         return newtoken;
     }
 
-    public static String sendMsg(String touser){
+    public static String sendMsg(int tempId,String touser){
         Map<String,Object> param = new HashMap();
         String reqUrl = WxConfig.WX_PUSH_URL.replace("ACCESS_TOKEN",access_token);
         param.put("touser",touser);
-        AddBill addBill = new AddBill(new KeyWord("2019-10-19 16:09:25"),new KeyWord("24"),new KeyWord("16"),new KeyWord("红烧肉盖浇饭（1）份"));
-        WeAppMsg weAppMsg = new WeAppMsg("voi_hZG3sOOWIcdqYPxu9EKcmKSL4KXIGEawQr_CxmE","730dab3cfe8d48ebbbbff85ca8fd7b19",addBill);
-        param.put("weapp_template_msg",weAppMsg);
         param.put("page","pages/index/index");
-        String reqJson = JSON.toJSONString(param);
+        WeAppMsg weAppMsg;
+        if(tempId==1){
+            //新订单推送
+            AddBill addBill = new AddBill(new KeyWord("2019-10-24 10:45:25"),new KeyWord("24"),new KeyWord("16"),new KeyWord("测试红烧肉盖浇饭（1）份"));
+            weAppMsg = new WeAppMsg(touser,"7a8V3A6vTlst2FAzogfu7m4UxP2n12navvJu27LjQdU",addBill);
+        }else if(tempId==2){
+
+            //新订单推送
+            AddBill addBill = new AddBill(new KeyWord("2019-10-24 10:45:25"),new KeyWord("24"),new KeyWord("16"),new KeyWord("测试红烧肉盖浇饭（1）份"));
+
+            weAppMsg = new WeAppMsg(touser,"voi_hZG3sOOWIcdqYPxu9EKcmKSL4KXIGEawQr_CxmE",addBill);
+
+
+        }else {
+            weAppMsg =  new WeAppMsg();
+        }
+
+        String reqJson = JSON.toJSONString(weAppMsg);
         System.out.println(reqJson);
         String restlt = postJson(reqUrl,reqJson);
         return restlt;

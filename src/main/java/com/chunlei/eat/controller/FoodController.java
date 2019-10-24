@@ -23,21 +23,22 @@ public class FoodController {
     private FoodService foodService;
 
 
-    @RequestMapping(value = "/addOne",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value="添加一个菜品", notes="添加一个菜品")
-    public ApiResp addOne(@RequestBody FoodInfo foodInfo){
-        ApiResp resp = new ApiResp();
-        log.info("\n-----添加一个菜品---->"+foodInfo);
-        foodService.addFood(foodInfo,resp);
-        return resp;
-    }
+//    @RequestMapping(value = "/addOne",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+//    @ApiOperation(value="添加一个菜品", notes="添加一个菜品")
+//    public ApiResp addOne(@RequestBody FoodInfo foodInfo){
+//        ApiResp resp = new ApiResp();
+//        log.info("\n-----添加一个菜品---->"+foodInfo);
+//        foodService.addFood(foodInfo,resp);
+//        return resp;
+//    }
 
-    @RequestMapping(value = "/updateOne",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-    @ApiOperation(value="重新编辑菜品", notes="重新编辑菜品")
-    public ApiResp updateOne(@RequestBody FoodInfo foodInfo){
+    @RequestMapping(value = "/addorup",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
+    @ApiOperation(value="新增或修改菜品", notes="新增或修改菜品")
+    public ApiResp addorup(@RequestBody FoodInfo foodInfo){
         ApiResp resp = new ApiResp();
-        log.info("\n-----重新编辑菜品---->"+foodInfo);
-        foodService.updateFood(foodInfo,resp);
+        log.info("\n-----新增或修改菜品---->"+foodInfo);
+        foodService.addorup(foodInfo,resp);
+        log.info("\n-----新增或修改菜品resp---->"+resp);
         return resp;
     }
 

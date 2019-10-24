@@ -9,7 +9,7 @@ public class WxConfig {
 
     public static final String WX_ACCESS_TOKEN_URL = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=wx4d9d0dd11e726af3&secret=a1477410f65c673f55f441ab12505744";
 
-    public static final String WX_PUSH_URL="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/uniform_send?access_token=ACCESS_TOKEN";
+    public static final String WX_PUSH_URL="https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=ACCESS_TOKEN";
 
 
 }

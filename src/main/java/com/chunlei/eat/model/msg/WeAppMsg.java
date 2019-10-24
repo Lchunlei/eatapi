@@ -4,6 +4,7 @@ package com.chunlei.eat.model.msg;
  * @Created by lcl on 2019/10/19 0019
  */
 public class WeAppMsg {
+    private String touser;
     private String template_id;
     private String page;
     private String form_id;
@@ -12,11 +13,19 @@ public class WeAppMsg {
     public WeAppMsg() {
     }
 
-    public WeAppMsg(String template_id, String form_id, Object data) {
+    public WeAppMsg(String touser, String template_id, Object data) {
         this.template_id = template_id;
-        this.form_id = form_id;
+        this.touser = touser;
         this.page = "pages/index/index";
         this.data = data;
+    }
+
+    public String getTouser() {
+        return touser;
+    }
+
+    public void setTouser(String touser) {
+        this.touser = touser;
     }
 
     public String getTemplate_id() {

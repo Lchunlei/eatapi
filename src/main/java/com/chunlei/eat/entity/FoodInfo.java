@@ -31,6 +31,7 @@ public class FoodInfo {
                 ", shopId=" + shopId +
                 ", foodStatus=" + foodStatus +
                 ", paixu=" + paixu +
+                ", cateId=" + cateId +
                 ", sellStatus='" + sellStatus + '\'' +
                 '}';
     }

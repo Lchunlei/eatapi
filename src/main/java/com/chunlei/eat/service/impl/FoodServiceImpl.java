@@ -30,11 +30,12 @@ public class FoodServiceImpl implements FoodService {
     private static final Logger log = LoggerFactory.getLogger(FoodServiceImpl.class);
     private static final Map<Integer,String> CATE_INFO = new HashMap();
     static {
-        CATE_INFO.put(1,"招牌");
-        CATE_INFO.put(2,"热销");
-        CATE_INFO.put(3,"主食");
-        CATE_INFO.put(4,"酒水");
-        CATE_INFO.put(5,"其他");
+        CATE_INFO.put(1,"今日优惠");
+        CATE_INFO.put(5,"招牌");
+        CATE_INFO.put(10,"热销");
+        CATE_INFO.put(15,"特色");
+        CATE_INFO.put(20,"酒水");
+        CATE_INFO.put(25,"其他");
     }
     @Autowired
     private FoodMapper foodMapper;
@@ -43,22 +44,22 @@ public class FoodServiceImpl implements FoodService {
     @Autowired
     private QrCodeMapper qrCodeMapper;
 
-    @Override
-    public void addFood(FoodInfo foodInfo, ApiResp resp) {
-        Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
-        if(shopId==null){
-            resp.respErr(MsgConstant.NOT_LOGIN);
-        }else {
-            ShopInfo shopInfo = shopMapper.findShopById(shopId);
-            if(!shopInfo.getUserRole().equals(1)){
-                //员工
-                shopId = shopInfo.getMySid();
-            }
-            foodInfo.setShopId(shopId);
-            foodMapper.insertOne(foodInfo);
-        }
-
-    }
+//    @Override
+//    public void addFood(FoodInfo foodInfo, ApiResp resp) {
+//        Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
+//        if(shopId==null){
+//            resp.respErr(MsgConstant.NOT_LOGIN);
+//        }else {
+//            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+//            if(!shopInfo.getUserRole().equals(1)){
+//                //员工
+//                shopId = shopInfo.getMySid();
+//            }
+//            foodInfo.setShopId(shopId);
+//            foodMapper.insertOne(foodInfo);
+//        }
+//
+//    }
 
 //    @Override
 //    public void addFoods(MuchFood muchFood, ApiResp resp) {
@@ -107,7 +108,7 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void updateFood(FoodInfo foodInfo, ApiResp resp) {
+    public void addorup(FoodInfo foodInfo, ApiResp resp) {
         Integer shopId = TokenUtil.getSidByToken(foodInfo.geteToken());
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
@@ -117,8 +118,16 @@ public class FoodServiceImpl implements FoodService {
                 //员工
                 shopId = shopInfo.getMySid();
             }
-            foodInfo.setShopId(shopId);
-            int i = foodMapper.updateBath(foodInfo);
+            int i = 0;
+            if(foodInfo.getFoodId().equals(0)){
+                //新增菜品
+                foodInfo.setShopId(shopId);
+                i = foodMapper.insertOne(foodInfo);
+            }else {
+                //修改菜品
+                foodInfo.setShopId(shopId);
+                i = foodMapper.updateBath(foodInfo);
+            }
             if(i!=1){
                 resp.setRespMsg(MsgConstant.OPE_ERR);
             }
@@ -165,7 +174,7 @@ public class FoodServiceImpl implements FoodService {
         }
         ShopInfo shopInfo = shopMapper.findShopById(shopId);
         List<MenuCate> menuCates = new ArrayList();
-        for(int i=1;i<6;i++){
+        for(int i=1;i<27;i++){
             List<FoodInfo> foodInfos = foodMapper.findCanEatBycateId(shopId,i);
             if(!foodInfos.isEmpty()){
                 MenuCate cate = new MenuCate(i,CATE_INFO.get(i),"123.jpg",foodInfos);
