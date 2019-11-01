@@ -32,21 +32,26 @@ public class QrCodeServiceImpl implements QrCodeService {
         if(sId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
-            Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
-            if(qrTotal!=null && qrTotal>19){
-                resp.respErr("您店铺专属桌码已达20上限，请联系客服修改！");
+            ShopInfo shopInfo = shopMapper.findShopById(sId);
+            if(StringTool.isBlank(shopInfo.getShopName())||StringTool.isBlank(shopInfo.getBossTel())){
+                resp.respErr(MsgConstant.SHOP_NULL_MAKE);
             }else {
-                //开始绑定桌码
-                QrCode nQr = qrCodeMapper.findQrById(qrId);
-                if(nQr.getShopId()==null){
-                    int i = qrCodeMapper.binding(qrId,sId,deskCode);
-                    if(i==1){
-                        resp.setRespMsg("绑码成功！贴到桌角侯客吧");
-                    }else {
-                        resp.respErr(MsgConstant.OPE_ERR);
-                    }
+                Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
+                if(qrTotal!=null && qrTotal>19){
+                    resp.respErr("您店铺专属桌码已达20上限，请联系客服修改！");
                 }else {
-                    resp.respErr("二维码被占用，绑定失败");
+                    //开始绑定桌码
+                    QrCode nQr = qrCodeMapper.findQrById(qrId);
+                    if(nQr.getShopId()==null){
+                        int i = qrCodeMapper.binding(qrId,sId,deskCode);
+                        if(i==1){
+                            resp.setRespMsg("绑码成功！贴到桌角侯客吧");
+                        }else {
+                            resp.respErr(MsgConstant.OPE_ERR);
+                        }
+                    }else {
+                        resp.respErr("二维码被占用，绑定失败");
+                    }
                 }
             }
         }

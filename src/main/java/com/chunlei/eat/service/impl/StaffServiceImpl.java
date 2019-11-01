@@ -64,12 +64,12 @@ public class StaffServiceImpl implements StaffService {
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
             ShopInfo shopInfo = shopMapper.findShopById(sId);
-            if(StringTool.isBlank(shopInfo.getShopName())){
-                resp.respErr(MsgConstant.NOT_IS_SHOP);
+            if(StringTool.isBlank(shopInfo.getShopName())||StringTool.isBlank(shopInfo.getBossTel())){
+                resp.respErr(MsgConstant.SHOP_NULL_MAKE);
             }else {
                 List<QrCode> qrCodes = qrCodeMapper.findShopAllQr(sId);
                 if(qrCodes.isEmpty()){
-                    resp.respErr("您的店铺尚未布置完善");
+                    resp.respErr("请先绑定本店餐桌二维码");
                 }else {
                     ShopInfo inviteUser = new ShopInfo();
                     UserInfo userInfo = userMapper.findById(uId);

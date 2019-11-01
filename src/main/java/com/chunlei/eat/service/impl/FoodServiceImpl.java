@@ -11,6 +11,7 @@ import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
 import com.chunlei.eat.model.resp.MenuCate;
 import com.chunlei.eat.service.FoodService;
+import com.chunlei.eat.utils.StringTool;
 import com.chunlei.eat.utils.TokenUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,22 +115,26 @@ public class FoodServiceImpl implements FoodService {
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
             ShopInfo shopInfo = shopMapper.findShopById(shopId);
-            if(!shopInfo.getUserRole().equals(1)){
-                //员工
-                shopId = shopInfo.getMySid();
-            }
-            int i = 0;
-            if(foodInfo.getFoodId().equals(0)){
-                //新增菜品
-                foodInfo.setShopId(shopId);
-                i = foodMapper.insertOne(foodInfo);
+            if(StringTool.isBlank(shopInfo.getShopName())||StringTool.isBlank(shopInfo.getBossTel())){
+                resp.respErr(MsgConstant.SHOP_NULL_MAKE);
             }else {
-                //修改菜品
-                foodInfo.setShopId(shopId);
-                i = foodMapper.updateBath(foodInfo);
-            }
-            if(i!=1){
-                resp.setRespMsg(MsgConstant.OPE_ERR);
+                if(!shopInfo.getUserRole().equals(1)){
+                    //员工
+                    shopId = shopInfo.getMySid();
+                }
+                int i = 0;
+                if(foodInfo.getFoodId().equals(0)){
+                    //新增菜品
+                    foodInfo.setShopId(shopId);
+                    i = foodMapper.insertOne(foodInfo);
+                }else {
+                    //修改菜品
+                    foodInfo.setShopId(shopId);
+                    i = foodMapper.updateBath(foodInfo);
+                }
+                if(i!=1){
+                    resp.setRespMsg(MsgConstant.OPE_ERR);
+                }
             }
         }
     }

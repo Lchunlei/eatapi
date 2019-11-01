@@ -34,4 +34,7 @@ public interface UserMapper {
     @Select("SELECT * FROM user_info WHERE userId=#{userId}")
     UserInfo findById(@Param("userId")Integer userId);
 
+    @Update("UPDATE user_info SET sayDate=#{sayDate},sayMsg=${sayMsg} WHERE userId=${userId}")
+    int sayMsg(@Param("userId")Integer userId,@Param("sayMsg")Integer sayMsg,@Param("sayDate") String sayDate);
+
 }

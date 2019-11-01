@@ -27,5 +27,6 @@ public class MsgConstant {
 
     public static final String FOOD_NULL = "老板略懒，未发菜品！";
 
+    public static final String SHOP_NULL_MAKE ="商家入驻成功后才可设置！";
 
 }

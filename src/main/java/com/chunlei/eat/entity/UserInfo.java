@@ -8,11 +8,9 @@ import java.util.Date;
 public class UserInfo {
     private Integer userId;
     private String wxOpenId;
-//    private Integer billId;
-//    private Integer shopId;
-//    private Integer myShopId;
-//    private Integer shopRole;//1服务员2厨师
     private Integer useStatus;//0禁用1正常
+    private Integer sayMsg;
+    private String sayDate;
     private Date uTime;
 
     @Override
@@ -20,8 +18,23 @@ public class UserInfo {
         return "UserInfo{" +
                 "userId=" + userId +
                 ", wxOpenId='" + wxOpenId + '\'' +
-                ", uTime=" + uTime +
                 '}';
+    }
+
+    public Integer getSayMsg() {
+        return sayMsg;
+    }
+
+    public void setSayMsg(Integer sayMsg) {
+        this.sayMsg = sayMsg;
+    }
+
+    public String getSayDate() {
+        return sayDate;
+    }
+
+    public void setSayDate(String sayDate) {
+        this.sayDate = sayDate;
     }
 
     public Integer getUseStatus() {

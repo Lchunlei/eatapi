@@ -3,10 +3,7 @@ package com.chunlei.eat.utils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.chunlei.eat.common.WxConfig;
-import com.chunlei.eat.model.msg.AddBill;
-import com.chunlei.eat.model.msg.KeyWord;
-import com.chunlei.eat.model.msg.TakeFood;
-import com.chunlei.eat.model.msg.WeAppMsg;
+import com.chunlei.eat.model.msg.*;
 import com.chunlei.eat.model.resp.QrMsg;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
@@ -34,7 +31,7 @@ import java.util.*;
  * @Created by lcl on 2019/8/26 0026
  */
 public class Reqclient {
-    private static String access_token="26_kaNvrFDXlbzdCGdkDeiHdbfJu_2QOopmMFs4gwQbLlLarDC1iSWj2FD2_Nnvc-wUw6vYEvxffxaB4rj97MvVcTz2_szV2ezoUKve6d9InQZOWoElgw26-ueSOrAWLXaAEANCO";
+    private static String access_token="26_rV7rSWgVvteu6e2BDBnbpH9KN015QPNgaSJo7Mk14FfI05f5hvXVCAcD7E_m7nT73NbG78rNH50dD1BMruVEiHJtsQ_KDSmHI8RhCCsBxhRRYS6FoRW6iAKFboMVjy0S0GesKEmp3XgC51G9ZNXiAIAUIS";
     public static String getWxOpenId(String code){
         String reqUrl = WxConfig.WX_OPENID_URL.replace("CODE",code);
         return getReq(reqUrl);
@@ -55,8 +52,9 @@ public class Reqclient {
         param.put("page","pages/index/index");
         WeAppMsg weAppMsg;
         if(tempId==1){
+            //订阅消息
             //新订单推送
-            AddBill addBill = new AddBill(new KeyWord("2019-10-24 10:45:25"),new KeyWord("24"),new KeyWord("16"),new KeyWord("测试红烧肉盖浇饭（1）份"));
+            AddFood addBill = new AddFood(new KeyWord("红烧肉块"),new KeyWord("2019-10-24 10:45:25"),new KeyWord("限时优惠啦，好吃不贵很划算"));
             weAppMsg = new WeAppMsg(touser,"7a8V3A6vTlst2FAzogfu7m4UxP2n12navvJu27LjQdU",addBill);
         }else if(tempId==2){
 

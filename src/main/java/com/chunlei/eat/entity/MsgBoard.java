@@ -13,6 +13,16 @@ public class MsgBoard {
     private Integer supportNum;
     private Date cTime;
 
+    private String eToken;
+
+    public String geteToken() {
+        return eToken;
+    }
+
+    public void seteToken(String eToken) {
+        this.eToken = eToken;
+    }
+
     public Integer getMbId() {
         return mbId;
     }
