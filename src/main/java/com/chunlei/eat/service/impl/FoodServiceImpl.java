@@ -1,15 +1,18 @@
 package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
+import com.chunlei.eat.entity.FoodCate;
 import com.chunlei.eat.entity.FoodInfo;
 import com.chunlei.eat.entity.QrCode;
 import com.chunlei.eat.entity.ShopInfo;
+import com.chunlei.eat.mapper.FoodCateMapper;
 import com.chunlei.eat.mapper.FoodMapper;
 import com.chunlei.eat.mapper.QrCodeMapper;
 import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
 import com.chunlei.eat.model.resp.MenuCate;
+import com.chunlei.eat.model.resp.ShopMenu;
 import com.chunlei.eat.service.FoodService;
 import com.chunlei.eat.utils.StringTool;
 import com.chunlei.eat.utils.TokenUtil;
@@ -44,6 +47,8 @@ public class FoodServiceImpl implements FoodService {
     private ShopMapper shopMapper;
     @Autowired
     private QrCodeMapper qrCodeMapper;
+    @Autowired
+    private FoodCateMapper foodCateMapper;
 
 //    @Override
 //    public void addFood(FoodInfo foodInfo, ApiResp resp) {
@@ -202,6 +207,39 @@ public class FoodServiceImpl implements FoodService {
             canEat(0,eToken,resp);
         }else {
             canEat(tQr.getShopId(),eToken,resp);
+        }
+    }
+
+    @Override
+    public void qrCodeInfo(String qrId,ApiResp<ShopMenu> resp) {
+        if(StringTool.isBlank(qrId)){
+            resp.respErr(MsgConstant.NO_SCAN);
+        }else {
+            try {
+                Integer qId = Integer.parseInt(qrId);
+                QrCode tQr = qrCodeMapper.findQrById(qId);
+                ShopInfo shopInfo = shopMapper.findShopById(tQr.getShopId());
+                List<FoodCate> foodCates = foodCateMapper.findMyCates(tQr.getShopId());
+                List<MenuCate> menuCates = new ArrayList();
+                for(FoodCate c:foodCates){
+                    List<FoodInfo> foodInfos = foodMapper.findCanEatBycateId(tQr.getShopId(),c.getCateId());
+                    if(!foodInfos.isEmpty()){
+                        MenuCate cate = new MenuCate(c.getCateId(),c.getCateName(),"123.jpg",foodInfos);
+                        menuCates.add(cate);
+                    }
+                }
+                resp.setRespMsg(shopInfo.getShopName());
+                if(menuCates.isEmpty()){
+                    resp.respErr(MsgConstant.FOOD_NULL);
+                }else {
+                    ShopMenu shopMenu = new ShopMenu();
+                    shopMenu.setCates(foodCates);
+                    shopMenu.setFoods(menuCates);
+                    resp.setRespData(shopMenu);
+                }
+            }catch (Exception e){
+                resp.respErr(MsgConstant.NO_SCAN_ERR);
+            }
         }
     }
 

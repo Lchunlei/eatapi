@@ -1,8 +1,10 @@
 package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
+import com.chunlei.eat.entity.FoodCate;
 import com.chunlei.eat.entity.ShopInfo;
 import com.chunlei.eat.entity.VipPay;
+import com.chunlei.eat.mapper.FoodCateMapper;
 import com.chunlei.eat.mapper.QrCodeMapper;
 import com.chunlei.eat.mapper.ShopMapper;
 import com.chunlei.eat.mapper.VipPayMapper;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,6 +35,8 @@ public class ShopServiceImpl implements ShopService {
     private VipPayMapper vipPayMapper;
     @Autowired
     private QrCodeMapper qrCodeMapper;
+    @Autowired
+    private FoodCateMapper foodCateMapper;
 
     //用户主动登录
     @Override
@@ -126,6 +131,16 @@ public class ShopServiceImpl implements ShopService {
             shopInfo.setExpireTime(null);
             try {
                 shopMapper.updateBathInfo(shopInfo);
+                //设置本店默认菜谱
+                List<FoodCate> cates = foodCateMapper.findMyCates(sId);
+                if(cates.isEmpty()){
+                    //将默认菜谱类别同步到新店铺中
+                    List<FoodCate> deifCates = foodCateMapper.findMyCates(0);
+                    for(FoodCate c:deifCates){
+                        c.setShopId(sId);
+                        foodCateMapper.insertOne(c);
+                    }
+                }
             }catch (Exception e){
                 apiResp.respErr("不支持特殊字符");
             }

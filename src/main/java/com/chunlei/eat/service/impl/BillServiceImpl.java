@@ -114,9 +114,9 @@ public class BillServiceImpl implements BillService {
             Integer billId = billInfoMapper.notOut(billInfos.get(0).getShopId(),userId);
             Integer rate;
             if(billId==null){
-                rate =1;
+                rate =0;
             }else {
-                rate = billInfoMapper.findRateByBillid(billInfos.get(0).getShopId(),billId)+1;
+                rate = billInfoMapper.findRateByBillid(billInfos.get(0).getShopId(),billId);
             }
 
             int total = 0;

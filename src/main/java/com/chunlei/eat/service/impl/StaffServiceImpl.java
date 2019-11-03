@@ -122,7 +122,7 @@ public class StaffServiceImpl implements StaffService {
     public void lookupStaff(String eToken, ApiResp<Integer> resp) {
         Integer sId = TokenUtil.getSidByToken(eToken);
         if(sId==null){
-            resp.respErr(MsgConstant.NOT_LOGIN);
+            resp.loginErr();
         }else {
             ShopInfo mine = shopMapper.lookUpInvite(sId);
             if(mine==null){

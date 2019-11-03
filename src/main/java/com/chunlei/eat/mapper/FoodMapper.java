@@ -38,5 +38,7 @@ public interface FoodMapper {
     @Update("UPDATE food_info SET foodStatus=#{foodStatus} WHERE foodId=#{foodId}")
     int updateSell(@Param("foodStatus")Integer foodStatus,@Param("foodId")Integer foodId);
 
+    @Select("SELECT * FROM food_info WHERE cateId=#{cateId}")
+    List<FoodInfo> findAllByCateId(@Param("cateId")Integer cateId);
 
 }

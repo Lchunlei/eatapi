@@ -1,5 +1,6 @@
 package com.chunlei.eat.model;
 
+import com.chunlei.eat.common.MsgConstant;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -28,6 +29,11 @@ public class ApiResp<T> {
     public void respErr(String errMsg) {
         this.respCode = "R500";
         this.respMsg = errMsg;
+    }
+
+    public void loginErr() {
+        this.respCode = "R502";
+        this.respMsg = MsgConstant.NOT_LOGIN;
     }
 
     @Override

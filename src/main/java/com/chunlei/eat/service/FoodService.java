@@ -4,6 +4,7 @@ import com.chunlei.eat.entity.FoodInfo;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
 import com.chunlei.eat.model.resp.MenuCate;
+import com.chunlei.eat.model.resp.ShopMenu;
 
 import java.util.List;
 
@@ -27,6 +28,8 @@ public interface FoodService {
     public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp);
 
     public void deskCodeInfo(Integer qrId,String eToken,ApiResp<List<MenuCate>> resp);
+
+    public void qrCodeInfo(String qrId,ApiResp<ShopMenu> resp);
 
     public void findAll(String eToken, ApiResp<List<FoodInfo>> resp);
 
