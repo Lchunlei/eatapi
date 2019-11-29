@@ -13,7 +13,7 @@ public class CtmBill {
     private Integer userId;
     private Integer shopId;
     private Integer deskCode;
-    private Date makeTime;
+    private String makeTime;
     private List<BillInfo> bills;
 
     @Override
@@ -59,11 +59,11 @@ public class CtmBill {
         this.deskCode = deskCode;
     }
 
-    public Date getMakeTime() {
+    public String getMakeTime() {
         return makeTime;
     }
 
-    public void setMakeTime(Date makeTime) {
+    public void setMakeTime(String makeTime) {
         this.makeTime = makeTime;
     }
 

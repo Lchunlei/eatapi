@@ -211,14 +211,24 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public void qrCodeInfo(String qrId,ApiResp<ShopMenu> resp) {
+    public void qrCodeInfo(String qrId, String eToken,ApiResp<ShopMenu> resp) {
         if(StringTool.isBlank(qrId)){
             resp.respErr(MsgConstant.NO_SCAN);
         }else {
             try {
                 Integer qId = Integer.parseInt(qrId);
-                QrCode tQr = qrCodeMapper.findQrById(qId);
-                ShopInfo shopInfo = shopMapper.findShopById(tQr.getShopId());
+                QrCode tQr;
+                ShopInfo shopInfo;
+                if(qId.equals(0)){
+                    //代客下单菜谱
+                    String uOPenId = TokenUtil.getUopenIdByToken(eToken);
+                    shopInfo = shopMapper.findMyShop(uOPenId);
+                    tQr = new QrCode(shopInfo.getShopId(),0);
+                }else {
+                    //正常扫码查看菜谱
+                    tQr = qrCodeMapper.findQrById(qId);
+                    shopInfo= shopMapper.findShopById(tQr.getShopId());
+                }
                 List<FoodCate> foodCates = foodCateMapper.findMyCates(tQr.getShopId());
                 List<MenuCate> menuCates = new ArrayList();
                 for(FoodCate c:foodCates){

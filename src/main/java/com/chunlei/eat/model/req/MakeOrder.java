@@ -11,6 +11,7 @@ public class MakeOrder {
     private String eToken;
     private Integer shopId;
     private Integer deskCode;
+    private String foodRemark;
     private List<FoodInfo> billInfos;
 
     @Override
@@ -18,9 +19,18 @@ public class MakeOrder {
         return "MakeOrder{" +
                 "eToken='" + eToken + '\'' +
                 ", shopId=" + shopId +
+                ", foodRemark=" + foodRemark +
                 ", deskCode=" + deskCode +
                 ", billInfos=" + billInfos +
                 '}';
+    }
+
+    public String getFoodRemark() {
+        return foodRemark;
+    }
+
+    public void setFoodRemark(String foodRemark) {
+        this.foodRemark = foodRemark;
     }
 
     public String geteToken() {

@@ -15,6 +15,7 @@ public class BillInfo {
     private Integer eatNum;
     private Integer totalPrice;
     private Integer billStatus;//0未支付1已支付2完成交易
+    private String billRemark;
     private Date cTime;
 
     private String eToken;
@@ -22,7 +23,7 @@ public class BillInfo {
     public BillInfo() {
     }
 
-    public BillInfo(Integer userId, Integer shopId,Integer deskCode, Integer foodId, String foodName, Integer eatNum, Integer totalPrice) {
+    public BillInfo(Integer userId, Integer shopId,Integer deskCode, Integer foodId, String foodName, Integer eatNum, Integer totalPrice,String billRemark) {
         this.userId = userId;
         this.shopId = shopId;
         this.deskCode = deskCode;
@@ -30,6 +31,7 @@ public class BillInfo {
         this.foodName = foodName;
         this.eatNum = eatNum;
         this.totalPrice = totalPrice;
+        this.billRemark = billRemark;
     }
 
     @Override
@@ -47,6 +49,14 @@ public class BillInfo {
                 ", cTime=" + cTime +
                 ", eToken='" + eToken + '\'' +
                 '}';
+    }
+
+    public String getBillRemark() {
+        return billRemark;
+    }
+
+    public void setBillRemark(String billRemark) {
+        this.billRemark = billRemark;
     }
 
     public Integer getDeskCode() {

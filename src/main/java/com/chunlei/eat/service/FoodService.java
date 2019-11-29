@@ -29,7 +29,7 @@ public interface FoodService {
 
     public void deskCodeInfo(Integer qrId,String eToken,ApiResp<List<MenuCate>> resp);
 
-    public void qrCodeInfo(String qrId,ApiResp<ShopMenu> resp);
+    public void qrCodeInfo(String qrId,String eToken,ApiResp<ShopMenu> resp);
 
     public void findAll(String eToken, ApiResp<List<FoodInfo>> resp);
 

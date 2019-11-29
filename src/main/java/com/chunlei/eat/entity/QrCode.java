@@ -24,6 +24,11 @@ public class QrCode {
     public QrCode() {
     }
 
+    public QrCode(Integer shopId, Integer deskCode) {
+        this.shopId = shopId;
+        this.deskCode = deskCode;
+    }
+
     public QrCode(Integer qrId) {
         this.qrId = qrId;
     }

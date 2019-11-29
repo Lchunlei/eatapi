@@ -31,7 +31,7 @@ import java.util.*;
  * @Created by lcl on 2019/8/26 0026
  */
 public class Reqclient {
-    private static String access_token="26_rV7rSWgVvteu6e2BDBnbpH9KN015QPNgaSJo7Mk14FfI05f5hvXVCAcD7E_m7nT73NbG78rNH50dD1BMruVEiHJtsQ_KDSmHI8RhCCsBxhRRYS6FoRW6iAKFboMVjy0S0GesKEmp3XgC51G9ZNXiAIAUIS";
+    private static String access_token="27_FVRgG24fpUC7hotGlG2qtPfMA0nsC2v6TKR2hl6i1Ad_YOfD8zBAp6syMpyPhGVWMcbDKcwdtdhSoTJGy08DNFY5_TynlAuVn5JudDCUMbSQct1GpdDnS_MAfAOF0Auy-wNhEyLneJkYWeaRLAJfAGADSB";
     public static String getWxOpenId(String code){
         String reqUrl = WxConfig.WX_OPENID_URL.replace("CODE",code);
         return getReq(reqUrl);
@@ -54,7 +54,7 @@ public class Reqclient {
         if(tempId==1){
             //订阅消息
             //新订单推送
-            AddFood addBill = new AddFood(new KeyWord("红烧肉块"),new KeyWord("2019-10-24 10:45:25"),new KeyWord("限时优惠啦，好吃不贵很划算"));
+            AddFood addBill = new AddFood(new KeyWord("掌柜提醒"),new KeyWord("2019-11-04 14:25:25"),new KeyWord("感谢您使用旺铺掌柜，如有疑问或异常请联系软件内人工客服"));
             weAppMsg = new WeAppMsg(touser,"7a8V3A6vTlst2FAzogfu7m4UxP2n12navvJu27LjQdU",addBill);
         }else if(tempId==2){
 

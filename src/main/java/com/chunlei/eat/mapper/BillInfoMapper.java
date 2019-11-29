@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BillInfoMapper {
 
-    @Insert("INSERT INTO bill_today_info(`userId`, `shopId`,`deskCode`, `foodId`, `foodName`, `eatNum`, `totalPrice`, `cTime`) VALUES (#{userId},#{shopId},#{deskCode},#{foodId},#{foodName},#{eatNum},#{totalPrice},NOW())")
+    @Insert("INSERT INTO bill_today_info(`userId`, `shopId`,`deskCode`, `foodId`, `foodName`, `eatNum`, `totalPrice`,`billRemark`, `cTime`) VALUES (#{userId},#{shopId},#{deskCode},#{foodId},#{foodName},#{eatNum},#{totalPrice},#{billRemark,jdbcType=VARCHAR},NOW())")
     int insertOne(BillInfo billInfo);
 
     @Delete("DELETE FROM bill_today_info WHERE billId=#{billId} AND shopId=#{shopId} AND billStatus='0'")
@@ -52,9 +52,9 @@ public interface BillInfoMapper {
     @Update("UPDATE bill_today_info SET billStatus=#{billStatus} WHERE billId=#{billId} AND shopId=#{shopId}")
     int updateStatus(@Param("billId")Integer billId,@Param("billStatus")Integer billStatus,@Param("shopId")Integer shopId);
 
-    //查看当前店铺未完成订单的客人ID
-    @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus=#{billStatus} ORDER BY cTime")
-    List<Integer> findUsersEating(@Param("shopId")Integer shopId,@Param("billStatus")Integer billStatus);
+    //查看今天客流量
+    @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND cTime>#{toDay}")
+    List<Integer> toDayUsers(@Param("shopId")Integer shopId,@Param("toDay")String toDay);
 
     //查看当前店铺未支付的客人ID
     @Select("SELECT DISTINCT(userId) FROM bill_today_info WHERE shopId=#{shopId} AND billStatus IN('0','1') ORDER BY cTime")

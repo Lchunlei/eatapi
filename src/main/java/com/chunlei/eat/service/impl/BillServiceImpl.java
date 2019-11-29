@@ -1,21 +1,22 @@
 package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
-import com.chunlei.eat.entity.BillInfo;
-import com.chunlei.eat.entity.FoodInfo;
-import com.chunlei.eat.entity.QrCode;
-import com.chunlei.eat.entity.ShopInfo;
+import com.chunlei.eat.entity.*;
 import com.chunlei.eat.mapper.*;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MakeOrder;
 import com.chunlei.eat.model.resp.CtmBill;
 import com.chunlei.eat.model.resp.UserRate;
 import com.chunlei.eat.service.BillService;
+import com.chunlei.eat.utils.StringTool;
 import com.chunlei.eat.utils.TokenUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.List;
  */
 @Service
 public class BillServiceImpl implements BillService {
+    private static final Logger log = LoggerFactory.getLogger(BillServiceImpl.class);
     @Autowired
     private BillInfoMapper billInfoMapper;
     @Autowired
@@ -35,6 +37,8 @@ public class BillServiceImpl implements BillService {
     private ShopMapper shopMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private ShopBlackMapper shopBlackMapper;
 
     /**
      * 通过菜谱下单
@@ -43,62 +47,58 @@ public class BillServiceImpl implements BillService {
     @Transactional
     public void makeBill(MakeOrder makeOrder, ApiResp resp) {
         Integer uid = TokenUtil.getUidByToken(makeOrder.geteToken());
-        Integer sid = TokenUtil.getSidByToken(makeOrder.geteToken());
+        if(StringTool.isBlank(makeOrder.getFoodRemark())){
+            makeOrder.setFoodRemark(null);
+        }
         //其中shopId就是传来的桌码ID
         if(makeOrder.getShopId()==null||makeOrder.getShopId().equals(0)){
-            //没有扫桌码直接下单、只允许商家自己下单，顾客必须扫码下单
-            if(sid==null){
-                //商家带客下单,商家没有登录
-                resp.respErr(MsgConstant.NOT_LOGIN);
+            //没有扫桌码,代客下单
+            String uOpenId = TokenUtil.getUopenIdByToken(makeOrder.geteToken());
+            ShopInfo shopInfo = shopMapper.findMyShop(uOpenId);
+            if(shopInfo==null){
+                resp.respErr(MsgConstant.OPE_ERR);
             }else {
-                //商家代客下单
-                ShopInfo shopInfo = shopMapper.findShopById(sid);
-                if(shopInfo.getUserRole().equals(1)){
-                    //店长
-                    for(FoodInfo b:makeOrder.getBillInfos()){
-                        FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-                        if(shopInfo.getShopId().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
-                            //菜单校验完毕，入库
-                            BillInfo billInfo = new BillInfo(0,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
-                            billInfoMapper.insertOne(billInfo);
-                        }else {
-                            resp.respErr(MsgConstant.OPE_ERR);
-                            throw new RuntimeException("菜品信息不合规！！");
-                        }
-                    }
-                }else {
-                    //店员
-                    for(FoodInfo b:makeOrder.getBillInfos()){
-                        FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-                        if(shopInfo.getMySid().equals(b.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
-                            //菜单校验完毕，入库
-                            BillInfo billInfo = new BillInfo(0,shopInfo.getMySid(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
-                            billInfoMapper.insertOne(billInfo);
-                        }else {
-                            resp.respErr(MsgConstant.OPE_ERR);
-                            throw new RuntimeException("菜品信息不合规！！");
-                        }
+                //获取下一个虚拟顾客号
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
+                String todayStr = format.format(new Date());
+                List<Integer> userIds = billInfoMapper.toDayUsers(shopInfo.getShopId(),todayStr);
+                Integer nextUserId = userIds.size()+1+1000000;
+                for(FoodInfo b:makeOrder.getBillInfos()){
+                    FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                    if(foodInfo.getShopId().equals(shopInfo.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                        //菜单校验完毕，入库
+                        BillInfo billInfo = new BillInfo(nextUserId,shopInfo.getShopId(),0,foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount(),makeOrder.getFoodRemark());
+                        billInfoMapper.insertOne(billInfo);
+                    }else {
+                        resp.respErr(MsgConstant.OPE_ERR);
+                        throw new RuntimeException("菜品信息不合规！！");
                     }
                 }
             }
+
+        }else if(uid==null){
+            resp.respErr(MsgConstant.OPE_ERR);
         }else {
             //扫了桌码下单
-            if(uid==null){
-                uid = userMapper.findMyInfo(TokenUtil.getSopenIdByToken(makeOrder.geteToken())).getUserId();
-            }
             QrCode qrCode = qrCodeMapper.findQrById(makeOrder.getShopId());
-            //先删除此人在其他店铺未完成的订单
-            billInfoMapper.delOtherShopBills(qrCode.getShopId());
-            for(FoodInfo b:makeOrder.getBillInfos()){
-                FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
-                if(foodInfo.getShopId().equals(qrCode.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
-                    //菜单校验完毕，入库
-                    BillInfo billInfo = new BillInfo(uid,qrCode.getShopId(),qrCode.getDeskCode(),foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount());
-                    billInfoMapper.insertOne(billInfo);
-                }else {
-                    resp.respErr(MsgConstant.OPE_ERR);
-                    throw new RuntimeException("菜品信息不合规！！");
+            //判断是否在黑名单内
+            ShopBlack black = shopBlackMapper.findBlack(qrCode.getShopId(),uid);
+            if(black==null){
+                //先删除此人在其他店铺未完成的订单
+                billInfoMapper.delOtherShopBills(qrCode.getShopId());
+                for(FoodInfo b:makeOrder.getBillInfos()){
+                    FoodInfo foodInfo = foodMapper.findFoodById(b.getFoodId());
+                    if(foodInfo.getShopId().equals(qrCode.getShopId())&&foodInfo.getFoodName().equals(b.getFoodName())){
+                        //菜单校验完毕，入库
+                        BillInfo billInfo = new BillInfo(uid,qrCode.getShopId(),qrCode.getDeskCode(),foodInfo.getFoodId(),foodInfo.getFoodName(),b.getCount(),b.getFoodPrice()*b.getCount(),makeOrder.getFoodRemark());
+                        billInfoMapper.insertOne(billInfo);
+                    }else {
+                        resp.respErr(MsgConstant.OPE_ERR);
+                        throw new RuntimeException("菜品信息不合规！！");
+                    }
                 }
+            }else {
+                resp.respErr(MsgConstant.OPE_ERR);
             }
         }
     }
@@ -117,6 +117,9 @@ public class BillServiceImpl implements BillService {
                 rate =0;
             }else {
                 rate = billInfoMapper.findRateByBillid(billInfos.get(0).getShopId(),billId);
+                if(rate.equals(0)){
+                    rate = 1;
+                }
             }
 
             int total = 0;
@@ -136,6 +139,10 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                shopId = shopInfo.getMySid();
+            }
             List<BillInfo> billInfos;
             if(tabNum.equals(1)){
                 //待出餐
@@ -161,6 +168,11 @@ public class BillServiceImpl implements BillService {
         if(shopId==null){
             resp.respErr(MsgConstant.NOT_LOGIN);
         }else {
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+            ShopInfo shopInfo = shopMapper.findShopById(shopId);
+            if(!shopInfo.getUserRole().equals(1)){
+                shopId = shopInfo.getMySid();
+            }
             //待处理客单
             List<Integer> noPayUsers = billInfoMapper.findUsersNoPay(shopId);
             if(noPayUsers.isEmpty()){
@@ -182,7 +194,7 @@ public class BillServiceImpl implements BillService {
                     }
                     cb.setBills(bs);
                     cb.setDeskCode(deskCode);
-                    cb.setMakeTime(makeTime);
+                    cb.setMakeTime(format.format(makeTime));
                     cb.setTotalPay(totalPay);
                     cb.setUserId(userId);
                     cb.setShopId(shopId);

@@ -50,6 +50,9 @@ public class ShopServiceImpl implements ShopService {
         }
         //拼接当前信息保存到店铺表
         String openid = TokenUtil.getUopenIdByToken(shopInfo.getWxOpenId());
+        if(StringTool.isBlank(openid)){
+            openid = TokenUtil.getSopenIdByToken(shopInfo.getWxOpenId());
+        }
         shopInfo.setWxOpenId(openid);
         ShopInfo shop = shopMapper.findMyShop(openid);
         int i;
@@ -187,14 +190,20 @@ public class ShopServiceImpl implements ShopService {
     public void getInfo(String eToken, ApiResp<ShopInfo> apiResp) {
         Integer sId = TokenUtil.getSidByToken(eToken);
         if(sId==null){
-            apiResp.respErr(MsgConstant.NOT_LOGIN);
+            String uOpenid = TokenUtil.getUopenIdByToken(eToken);
+            ShopInfo myShop = shopMapper.findMyShop(uOpenid);
+            if(StringTool.isBlank(uOpenid)||myShop==null){
+                apiResp.respErr(MsgConstant.NOT_LOGIN);
+            }else {
+                apiResp.setRespData(myShop);
+            }
         }else {
             ShopInfo shop = shopMapper.findShopById(sId);
             shop.setWxOpenId(null);
-            Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
-            if(qrTotal!=null){
-                shop.setQrTotal(qrTotal);
-            }
+//            Integer qrTotal = qrCodeMapper.findShopQrTotal(sId);
+//            if(qrTotal!=null){
+//                shop.setQrTotal(qrTotal);
+//            }
             apiResp.setRespData(shop);
         }
     }

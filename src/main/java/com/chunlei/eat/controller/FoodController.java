@@ -100,10 +100,10 @@ public class FoodController {
      * */
     @RequestMapping(value = "/qrCode",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="根据桌码查看可点的菜单", notes="根据桌码查看可点的菜单")
-    public ApiResp qrCodeInfo(@RequestParam String qrId){
+    public ApiResp qrCodeInfo(@RequestParam String qrId,@RequestParam String eToken){
         ApiResp resp = new ApiResp();
         log.info("\n-----查看可点的菜单---->"+qrId);
-        foodService.qrCodeInfo(qrId,resp);
+        foodService.qrCodeInfo(qrId,eToken,resp);
         log.info("\n-----查看可点的菜单resp---->"+resp);
         return resp;
     }
