@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface FoodMapper {
 
-    @Insert("INSERT INTO food_info(`foodName`,`foodPrice`,`shopId`,`cateId`,`paixu`,`uTime`) VALUES (#{foodName},#{foodPrice},#{shopId},#{cateId},#{paixu},NOW())")
+    @Insert("INSERT INTO food_info(`foodName`,`picUrl`,`foodPrice`,`shopId`,`cateId`,`paixu`,`uTime`) VALUES (#{foodName},#{picUrl,jdbcType=VARCHAR},#{foodPrice},#{shopId},#{cateId},#{paixu},NOW())")
     int insertOne(FoodInfo foodInfo);
 
     @UpdateProvider(type= FoodSql.class, method="updateSql")

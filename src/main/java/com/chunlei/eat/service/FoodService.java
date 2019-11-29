@@ -25,9 +25,9 @@ public interface FoodService {
 
     public void delOne(String eToken,Integer foodId, ApiResp resp);
 
-    public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp);
+//    public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp);
 
-    public void deskCodeInfo(Integer qrId,String eToken,ApiResp<List<MenuCate>> resp);
+//    public void deskCodeInfo(Integer qrId,String eToken,ApiResp<List<MenuCate>> resp);
 
     public void qrCodeInfo(String qrId,String eToken,ApiResp<ShopMenu> resp);
 

@@ -1,14 +1,8 @@
 package com.chunlei.eat.service.impl;
 
 import com.chunlei.eat.common.MsgConstant;
-import com.chunlei.eat.entity.FoodCate;
-import com.chunlei.eat.entity.FoodInfo;
-import com.chunlei.eat.entity.QrCode;
-import com.chunlei.eat.entity.ShopInfo;
-import com.chunlei.eat.mapper.FoodCateMapper;
-import com.chunlei.eat.mapper.FoodMapper;
-import com.chunlei.eat.mapper.QrCodeMapper;
-import com.chunlei.eat.mapper.ShopMapper;
+import com.chunlei.eat.entity.*;
+import com.chunlei.eat.mapper.*;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.model.req.MuchFood;
 import com.chunlei.eat.model.resp.MenuCate;
@@ -31,16 +25,16 @@ import java.util.Map;
  */
 @Service
 public class FoodServiceImpl implements FoodService {
-    private static final Logger log = LoggerFactory.getLogger(FoodServiceImpl.class);
-    private static final Map<Integer,String> CATE_INFO = new HashMap();
-    static {
-        CATE_INFO.put(1,"今日优惠");
-        CATE_INFO.put(5,"招牌");
-        CATE_INFO.put(10,"热销");
-        CATE_INFO.put(15,"特色");
-        CATE_INFO.put(20,"酒水");
-        CATE_INFO.put(25,"其他");
-    }
+//    private static final Logger log = LoggerFactory.getLogger(FoodServiceImpl.class);
+//    private static final Map<Integer,String> CATE_INFO = new HashMap();
+//    static {
+//        CATE_INFO.put(1,"今日优惠");
+//        CATE_INFO.put(5,"招牌");
+//        CATE_INFO.put(10,"热销");
+//        CATE_INFO.put(15,"特色");
+//        CATE_INFO.put(20,"酒水");
+//        CATE_INFO.put(25,"其他");
+//    }
     @Autowired
     private FoodMapper foodMapper;
     @Autowired
@@ -49,6 +43,8 @@ public class FoodServiceImpl implements FoodService {
     private QrCodeMapper qrCodeMapper;
     @Autowired
     private FoodCateMapper foodCateMapper;
+    @Autowired
+    private FoodImgMapper foodImgMapper;
 
 //    @Override
 //    public void addFood(FoodInfo foodInfo, ApiResp resp) {
@@ -131,10 +127,18 @@ public class FoodServiceImpl implements FoodService {
                 if(foodInfo.getFoodId().equals(0)){
                     //新增菜品
                     foodInfo.setShopId(shopId);
+                    FoodImg img = foodImgMapper.getOneImg(foodInfo.getFoodName());
+                    if(img!=null){
+                        foodInfo.setPicUrl(img.getImgUrl());
+                    }
                     i = foodMapper.insertOne(foodInfo);
                 }else {
                     //修改菜品
                     foodInfo.setShopId(shopId);
+                    FoodImg img = foodImgMapper.getOneImg(foodInfo.getFoodName());
+                    if(img!=null){
+                        foodInfo.setPicUrl(img.getImgUrl());
+                    }
                     i = foodMapper.updateBath(foodInfo);
                 }
                 if(i!=1){
@@ -172,43 +176,43 @@ public class FoodServiceImpl implements FoodService {
         }
     }
 
-    @Override
-    public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp) {
-        if(shopId ==0 ){
-            //代客下单
-            shopId = TokenUtil.getSidByToken(eToken);
-            if(shopId==null){
-                resp.respErr(MsgConstant.NO_SCAN);
-                return;
-            }
-        }
-        ShopInfo shopInfo = shopMapper.findShopById(shopId);
-        List<MenuCate> menuCates = new ArrayList();
-        for(int i=1;i<27;i++){
-            List<FoodInfo> foodInfos = foodMapper.findCanEatBycateId(shopId,i);
-            if(!foodInfos.isEmpty()){
-                MenuCate cate = new MenuCate(i,CATE_INFO.get(i),"123.jpg",foodInfos);
-                menuCates.add(cate);
-            }
-        }
-        resp.setRespMsg(shopInfo.getShopName());
-        if(menuCates.isEmpty()){
-            resp.respErr(MsgConstant.FOOD_NULL);
-        }else {
-            resp.setRespData(menuCates);
-        }
-    }
+//    @Override
+//    public void canEat(Integer shopId,String eToken,ApiResp<List<MenuCate>> resp) {
+//        if(shopId ==0 ){
+//            //代客下单
+//            shopId = TokenUtil.getSidByToken(eToken);
+//            if(shopId==null){
+//                resp.respErr(MsgConstant.NO_SCAN);
+//                return;
+//            }
+//        }
+//        ShopInfo shopInfo = shopMapper.findShopById(shopId);
+//        List<MenuCate> menuCates = new ArrayList();
+//        for(int i=1;i<27;i++){
+//            List<FoodInfo> foodInfos = foodMapper.findCanEatBycateId(shopId,i);
+//            if(!foodInfos.isEmpty()){
+//                MenuCate cate = new MenuCate(i,CATE_INFO.get(i),"123.jpg",foodInfos);
+//                menuCates.add(cate);
+//            }
+//        }
+//        resp.setRespMsg(shopInfo.getShopName());
+//        if(menuCates.isEmpty()){
+//            resp.respErr(MsgConstant.FOOD_NULL);
+//        }else {
+//            resp.setRespData(menuCates);
+//        }
+//    }
 
-    @Override
-    public void deskCodeInfo(Integer qrId, String eToken, ApiResp<List<MenuCate>> resp) {
-        //如果没有桌码ID，就直接返回本店的菜谱
-        QrCode tQr = qrCodeMapper.findQrById(qrId);
-        if(tQr==null||tQr.getShopId()==null){
-            canEat(0,eToken,resp);
-        }else {
-            canEat(tQr.getShopId(),eToken,resp);
-        }
-    }
+//    @Override
+//    public void deskCodeInfo(Integer qrId, String eToken, ApiResp<List<MenuCate>> resp) {
+//        //如果没有桌码ID，就直接返回本店的菜谱
+//        QrCode tQr = qrCodeMapper.findQrById(qrId);
+//        if(tQr==null||tQr.getShopId()==null){
+//            canEat(0,eToken,resp);
+//        }else {
+//            canEat(tQr.getShopId(),eToken,resp);
+//        }
+//    }
 
     @Override
     public void qrCodeInfo(String qrId, String eToken,ApiResp<ShopMenu> resp) {
