@@ -223,6 +223,10 @@ public class FoodServiceImpl implements FoodService {
                     //代客下单菜谱
                     String uOPenId = TokenUtil.getUopenIdByToken(eToken);
                     shopInfo = shopMapper.findMyShop(uOPenId);
+                    if(!shopInfo.getUserRole().equals(1)){
+                        //员工
+                        shopInfo = shopMapper.findShopById(shopInfo.getMySid());
+                    }
                     tQr = new QrCode(shopInfo.getShopId(),0);
                 }else {
                     //正常扫码查看菜谱

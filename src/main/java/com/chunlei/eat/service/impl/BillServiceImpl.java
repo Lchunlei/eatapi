@@ -59,6 +59,10 @@ public class BillServiceImpl implements BillService {
                 resp.respErr(MsgConstant.OPE_ERR);
             }else {
                 //获取下一个虚拟顾客号
+                if(!shopInfo.getUserRole().equals(1)){
+                    //遇到员工代客下单
+                    shopInfo = shopMapper.findShopById(shopInfo.getMySid());
+                }
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd 00:00:00");
                 String todayStr = format.format(new Date());
                 List<Integer> userIds = billInfoMapper.toDayUsers(shopInfo.getShopId(),todayStr);
