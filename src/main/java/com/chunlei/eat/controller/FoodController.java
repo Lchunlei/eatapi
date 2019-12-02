@@ -23,15 +23,6 @@ public class FoodController {
     private FoodService foodService;
 
 
-//    @RequestMapping(value = "/addOne",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="添加一个菜品", notes="添加一个菜品")
-//    public ApiResp addOne(@RequestBody FoodInfo foodInfo){
-//        ApiResp resp = new ApiResp();
-//        log.info("\n-----添加一个菜品---->"+foodInfo);
-//        foodService.addFood(foodInfo,resp);
-//        return resp;
-//    }
-
     @RequestMapping(value = "/addorup",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="新增或修改菜品", notes="新增或修改菜品")
     public ApiResp addorup(@RequestBody FoodInfo foodInfo){
@@ -61,39 +52,6 @@ public class FoodController {
         log.info("\n-----查看菜品详情---->"+resp);
         return resp;
     }
-
-//    @RequestMapping(value = "/delOne",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="删除菜品", notes="删除菜品")
-//    public ApiResp delOne(@RequestParam String eToken,@RequestParam Integer foodId){
-//        ApiResp resp = new ApiResp();
-//        log.info("\n-----删除菜品---->"+eToken+"-->"+foodId);
-//        foodService.delOne(eToken,foodId,resp);
-//        log.info("\n-----删除菜品resp---->"+resp);
-//        return resp;
-//    }
-
-//    @RequestMapping(value = "/can/eat",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="准备弃用", notes="准备弃用")
-//    public ApiResp canEat(@RequestParam Integer shopId,@RequestParam String eToken){
-//        ApiResp resp = new ApiResp();
-//        log.info("\n-----查看可点的菜单---->"+shopId+"-->"+eToken);
-//        foodService.canEat(shopId,eToken,resp);
-//        log.info("\n-----查看可点的菜单resp---->"+resp);
-//        return resp;
-//    }
-
-    /**
-     * 顾客侯餐时再点餐，如果没有桌码标识，提醒退出扫码重新进入
-     * */
-//    @RequestMapping(value = "/deskCode",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="准备弃用", notes="准备弃用")
-//    public ApiResp deskCodeInfo(@RequestParam Integer qrId,@RequestParam String eToken){
-//        ApiResp resp = new ApiResp();
-//        log.info("\n-----查看可点的菜单---->"+qrId+"-->"+eToken);
-//        foodService.deskCodeInfo(qrId,eToken,resp);
-//        log.info("\n-----查看可点的菜单resp---->"+resp);
-//        return resp;
-//    }
 
     /**
      * 顾客侯餐时再点餐，如果没有桌码标识，提醒退出扫码重新进入

@@ -1,6 +1,5 @@
 package com.chunlei.eat.controller;
 
-import com.chunlei.eat.entity.QrGet;
 import com.chunlei.eat.entity.ShopBlack;
 import com.chunlei.eat.model.ApiResp;
 import com.chunlei.eat.service.ShopBlackService;

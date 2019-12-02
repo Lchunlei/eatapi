@@ -45,15 +45,6 @@ public class ShopController {
         return resp;
     }
 
-//    @RequestMapping(value = "/upInfo",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="商家信息更新", notes="商家信息更新")
-//    public ApiResp upInfo(@RequestBody ShopInfo shopInfo){
-//        ApiResp<String> resp = new ApiResp();
-//        log.info("\n-----商家信息更新---->"+shopInfo);
-//        shopService.join(shopInfo,resp);
-//        return resp;
-//    }
-
     @RequestMapping(value = "/vip",method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="商家升级", notes="商家升级")
     public ApiResp renewVip(@RequestBody VipPay vipPay){

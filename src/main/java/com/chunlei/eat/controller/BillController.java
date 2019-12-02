@@ -47,16 +47,6 @@ public class BillController {
         return resp;
     }
 
-//    @RequestMapping(value = "/deal",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
-//    @ApiOperation(value="处理订单", notes="处理订单")
-//    public ApiResp deal(@RequestParam Integer billId,@RequestParam Integer billStatus,@RequestParam String eToken){
-//        ApiResp resp = new ApiResp();
-//        log.info("\n-----处理订单---->"+billId+"-->"+billStatus+"-->"+eToken);
-//        billService.deal(billId,billStatus,eToken,resp);
-//        log.info("\n-----处理订单resp---->"+resp);
-//        return resp;
-//    }
-
     @RequestMapping(value = "/ctmBill",method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
     @ApiOperation(value="查看本店客单", notes="查看本店客单")
     public ApiResp<List<CtmBill>> ctmBill(@RequestParam(required = false) Integer billStatus, @RequestParam String eToken){
