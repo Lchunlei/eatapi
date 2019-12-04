@@ -12,4 +12,6 @@ public interface DanMuService {
 
     public void findDanMus(String useType, ApiResp<List<DanMu>> resp);
 
+    public void sendDanMu(DanMu danMu,ApiResp resp);
+
 }

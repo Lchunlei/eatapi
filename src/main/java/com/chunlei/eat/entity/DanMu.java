@@ -1,5 +1,7 @@
 package com.chunlei.eat.entity;
 
+import java.util.Date;
+
 /**
  * @Created by lcl on 2019/11/29 0029
  */
@@ -9,6 +11,35 @@ public class DanMu {
     private String color;
     private Integer time;
     private Integer useType;
+    private String wxOpenId;
+    private Date cTime;
+
+    @Override
+    public String toString() {
+        return "DanMu{" +
+                "text='" + text + '\'' +
+                ", color='" + color + '\'' +
+                ", time=" + time +
+                ", useType=" + useType +
+                ", wxOpenId='" + wxOpenId + '\'' +
+                '}';
+    }
+
+    public String getWxOpenId() {
+        return wxOpenId;
+    }
+
+    public void setWxOpenId(String wxOpenId) {
+        this.wxOpenId = wxOpenId;
+    }
+
+    public Date getcTime() {
+        return cTime;
+    }
+
+    public void setcTime(Date cTime) {
+        this.cTime = cTime;
+    }
 
     public Integer getDmId() {
         return dmId;
